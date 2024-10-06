@@ -1,38 +1,32 @@
-// api/injuries.js
+const InjuriesController = require('../controllers/injuriesController');
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-
-const router = express.Router();
-
-// Setup file storage for uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Directory for uploaded files
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to filename
-    }
-});
-
-const upload = multer({ storage });
+const router = express.Router(); // Ensure this line is present
 
 module.exports = (db) => {
-    // Register a new injury
-    router.post('/register', upload.single('ski_card_photo'), (req, res) => {
-        const { timestamp, rescuer_id, ski_run, patient_name, patient_surname, birth_date, injury_points, medical_comment } = req.body;
-        const ski_card_photo = req.file ? `/uploads/${req.file.filename}` : null; // Get the file path
-        const sql = 'INSERT INTO injuries (timestamp, rescuer_id, ski_run, patient_name, patient_surname, birth_date, ski_card_photo, injury_points, medical_comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        
-        db.query(sql, [timestamp, rescuer_id, ski_run, patient_name, patient_surname, birth_date, ski_card_photo, injury_points, medical_comment], (error, results) => {
-            if (error) {
-                return res.status(500).send('Error registering injury');
-            }
-            res.status(201).send('Injury registered successfully');
-        });
+    const controller = new InjuriesController(db); // Pass db connection to the controller
+
+    // Get all injuries
+    router.get('/', async (req, res) => {
+        try {
+            const injuries = await controller.getAllInjuries(); // Call the controller method directly
+            res.json(injuries);
+        } catch (error) {
+            console.error('Error fetching injuries:', error); // Log error for debugging
+            res.status(500).json({ message: 'Error fetching injuries', error });
+        }
     });
 
-    // Add more injury-related endpoints here...
+    // Register a new injury
+    router.post('/', async (req, res) => {
+        try {
+            const injuryData = req.body; // Get data from the request body
+            await controller.registerInjury(injuryData); // Pass data to the controller method
+            res.status(201).json({ message: 'Injury registered successfully' });
+        } catch (error) {
+            console.error('Error registering injury:', error); // Log error for debugging
+            res.status(500).json({ message: 'Error registering injury', error });
+        }
+    });
 
-    return router; // Return the router
+    return router; // Return the router at the end
 };
