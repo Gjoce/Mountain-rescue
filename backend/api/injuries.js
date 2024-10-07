@@ -8,8 +8,7 @@ module.exports = (db) => {
     // Get all injuries
     router.get('/', async (req, res) => {
         try {
-            const injuries = await controller.getAllInjuries(); // Call the controller method directly
-            res.json(injuries);
+            await controller.getAllInjuries(req, res, db); // Pass req, res, and db to controller
         } catch (error) {
             console.error('Error fetching injuries:', error); // Log error for debugging
             res.status(500).json({ message: 'Error fetching injuries', error });
@@ -19,9 +18,7 @@ module.exports = (db) => {
     // Register a new injury
     router.post('/', async (req, res) => {
         try {
-            const injuryData = req.body; // Get data from the request body
-            await controller.registerInjury(injuryData); // Pass data to the controller method
-            res.status(201).json({ message: 'Injury registered successfully' });
+            await controller.registerInjury(req, res, db); // Pass req, res, and db to controller
         } catch (error) {
             console.error('Error registering injury:', error); // Log error for debugging
             res.status(500).json({ message: 'Error registering injury', error });
