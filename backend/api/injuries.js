@@ -10,9 +10,9 @@ router.use(verifyFirebaseToken);
 router.get('/admin', injuriesController.getAllInjuries);
 
 // Insert a new injury
-router.post('/injuries', injuriesController.insertInjury);
+router.post('/', injuriesController.insertInjury);
 
 // Get specific injuries submitted by a rescuer
-router.get('/injuries/:rescuer_id', injuriesController.getInjuriesByRescuer);
+router.get('/:rescuer_id', injuriesController.getInjuriesByRescuer);
 
 module.exports = router;
