@@ -16,25 +16,19 @@ exports.getAllInjuries = async (req, res) => {
 };
 
 // Insert a new injury
-// Insert a new injury
 exports.insertInjury = async (req, res) => {
   try {
-    const { uid, ski_run, injury_points, medical_comment, rescuer_signature, name, birth_date, ski_card_photo } = req.body;
+    // Get the uid from the authenticated user (req.user)
+    const uid = req.user.uid; // Assuming you have stored the decoded user info in req.user
+
+    // Destructure other fields from the request body
+    const { ski_run, injury_points, medical_comment, rescuer_signature, name, birth_date, ski_card_photo } = req.body;
 
     // Debugging: Log the uid received
     console.log(`Received uid: ${uid}`);
 
-    // Get rescuer's name based on uid
-    const rescuerDoc = await db.collection('rescuers').doc(uid).get();
-
-    // Debugging: Log if the rescuer document exists
-    console.log(`Rescuer document exists: ${rescuerDoc.exists}`);
-
-    if (!rescuerDoc.exists) {
-      return res.status(404).json({ message: 'Rescuer not found' });
-    }
-    
-    const rescuer_name = rescuerDoc.data().name;
+    // Optionally, you can still fetch the rescuer's name if needed
+    const rescuer_name = req.user.name || 'Unknown Rescuer'; // If you store the name in req.user during token verification
 
     // Add injury document to Firestore
     const newInjury = {
@@ -61,11 +55,12 @@ exports.insertInjury = async (req, res) => {
 
 
 
+
 // Get specific injuries submitted by a rescuer
 exports.getInjuriesByRescuer = async (req, res) => {
   try {
-    const rescuer_id = req.params.rescuer_id; // Rescuer's ID from the route params
-    const injuriesSnapshot = await db.collection('injuries').where('rescuer_id', '==', rescuer_id).get();
+    const uid = req.params.uid; // Rescuer's ID from the route params
+    const injuriesSnapshot = await db.collection('injuries').where('uid', '==', uid).get();
 
     let injuries = [];
     injuriesSnapshot.forEach((doc) => {

@@ -13,6 +13,6 @@ router.get('/admin', injuriesController.getAllInjuries);
 router.post('/', injuriesController.insertInjury);
 
 // Get specific injuries submitted by a rescuer
-router.get('/:rescuer_id', injuriesController.getInjuriesByRescuer);
+router.get('/:uid', injuriesController.getInjuriesByRescuer);
 
 module.exports = router;
