@@ -1,79 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase Login Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Login Test</title>
 
-  <!-- Correct Firebase CDN (non-module-based) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 </head>
 <body>
-  <h1>Firebase Login Test</h1>
+    <h1>Firebase Login Test</h1>
 
-  <!-- Login Form -->
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button type="submit">Login</button>
-  </form>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+    </form>
 
-  <!-- Display login errors -->
-  <div id="login-error" style="color: red;"></div>
-  <div id="result"></div>
+    <div id="login-error" style="color: red;"></div>
+    <div id="result"></div>
 
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCM__9j2n3QBf0Cb_NxDRncnx8u6i1QP_E",
-      authDomain: "mountain-rescue-863ea.firebaseapp.com",
-      projectId: "mountain-rescue-863ea",
-      storageBucket: "mountain-rescue-863ea.appspot.com",
-      messagingSenderId: "792489098952",
-      appId: "1:792489098952:web:cc5fd5ee1cf43ab18faffd"
-    };
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCM__9j2n3QBf0Cb_NxDRncnx8u6i1QP_E",
+            authDomain: "mountain-rescue-863ea.firebaseapp.com",
+            projectId: "mountain-rescue-863ea",
+            storageBucket: "mountain-rescue-863ea.appspot.com",
+            messagingSenderId: "792489098952",
+            appId: "1:792489098952:web:cc5fd5ee1cf43ab18faffd"
+        };
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent form from refreshing
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-      try {
-        // Sign in with Firebase Authentication
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        const idToken = await userCredential.user.getIdToken();
+            try {
+                // Sign in with Firebase Authentication
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const idToken = await userCredential.user.getIdToken();
 
-        // Send the ID token to the backend for verification
-        const response = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          }
+                // Send the ID token to the backend for verification
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('authToken', idToken); // Store the ID token
+
+                    // Redirect based on admin status
+                    if (data.isAdmin) {
+                        window.location.href = 'admin_panel.html'; // Admin panel URL
+                    } else {
+                        window.location.href = 'user_panel.html'; // Normal user panel URL
+                    }
+                } else {
+                    const errorData = await response.json();
+                    console.error('Login error:', errorData);
+                    document.getElementById('login-error').textContent = 'Login failed. ' + (errorData.message || 'Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('login-error').textContent = 'An error occurred: ' + error.message;
+            }
         });
-
-        if (response.ok) {
-          const data = await response.json();
-          // Store the token and redirect or display user info
-          localStorage.setItem('authToken', idToken); // Store the ID token
-          document.getElementById('result').textContent = `Login successful. Welcome, ${data.email || 'User'}!`; // Display user info if available
-        } else {
-          const errorData = await response.json(); // Fetch the response error data
-          console.error('Login error:', errorData); // Log the error
-          document.getElementById('login-error').textContent = 'Login failed. ' + (errorData.message || 'Please check your credentials.');
-        }
-      } catch (error) {
-        console.error('Login error:', error); // Log the error
-        document.getElementById('login-error').textContent = 'An error occurred: ' + error.message; // Display specific error message
-      }
-    });
-
-  </script>
+    </script>
 </body>
 </html>

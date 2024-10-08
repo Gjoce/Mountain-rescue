@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <a href="addRescuer.html">Register Rescuer</a> <!-- Link to the registration page -->
+    <button id="logout">Logout</button>
+
+    <script>
+        // Check if the user is logged in
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            alert('You must be logged in to access this page.');
+            window.location.href = 'index.html'; // Redirect to login page
+        }
+
+        // Logout function
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            window.location.href = 'index.html'; // Redirect to login page
+        });
+    </script>
+</body>
+</html>
