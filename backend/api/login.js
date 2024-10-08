@@ -1,3 +1,4 @@
+// login.js
 const express = require('express');
 const admin = require('firebase-admin');
 const router = express.Router();
@@ -26,11 +27,9 @@ router.post('/login', verifyFirebaseToken, async (req, res) => {
   try {
     const user = req.user;
     
-    // Here you can create your custom session or return some other token if needed.
-    // For example, we can generate a custom token for further use:
+    // Generate a custom token if needed
     const customToken = await admin.auth().createCustomToken(user.uid);
 
-    // Send custom token as response
     res.json({ token: customToken });
   } catch (error) {
     console.error('Error in login endpoint:', error);
@@ -38,4 +37,7 @@ router.post('/login', verifyFirebaseToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = {
+  router, // Export the router
+  verifyFirebaseToken // Export the middleware
+};
