@@ -1,29 +1,45 @@
-const InjuryModel = require('../models/injuryModel');
+// controllers/injuryController.js
+const injuryModel = require('../models/injuryModel');
 
-class InjuriesController {
-    constructor() {}
+// Get all injuries (admin view)
+const getAllInjuries = (req, res) => {
+  injuryModel.getAllInjuries((err, injuries) => {
+    if (err) return res.status(500).send(err);
+    res.json(injuries);
+  });
+};
 
-    async getAllInjuries(req, res, db) {
-        try {
-            const injuries = await InjuryModel.getAll(db); // Fetch all injuries
-            res.json(injuries);
-        } catch (err) {
-            console.error('Error fetching injuries:', err);
-            res.status(500).json({ message: 'Database query failed', error: err });
-        }
-    }
+// Get injuries by rescuer ID
+const getInjuriesByRescuer = (req, res) => {
+  const rescuer_id = req.params.rescuer_id;
 
-    async registerInjury(req, res, db) {
-        try {
-            const injuryData = req.body; // Get data from request body
-            console.log('Injury Data:', injuryData); // Log incoming data for debugging
-            await InjuryModel.register(injuryData, db); // Register the injury using the model
-            res.status(201).json({ message: 'Injury registered successfully' });
-        } catch (error) {
-            console.error('Error registering injury:', error);
-            res.status(500).json({ message: 'Error registering injury', error });
-        }
-    }
-}
+  injuryModel.getInjuriesByRescuer(rescuer_id, (err, injuries) => {
+    if (err) return res.status(500).send(err);
+    res.json(injuries);
+  });
+};
 
-module.exports = InjuriesController;
+// Insert a new injury
+const insertInjury = (req, res) => {
+    const injuryData = req.body;
+  
+    // Fetch rescuer name by rescuer_id
+    injuryModel.getRescuerNameById(injuryData.rescuer_id, (err, rescuerName) => {
+      if (err) return res.status(500).send({ message: err.message });
+  
+      // Automatically set the rescuer_name from the fetched data
+      injuryData.rescuer_name = rescuerName;
+  
+      // Insert the injury into the database
+      injuryModel.insertInjury(injuryData, (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: 'Injury inserted successfully', injuryId: result.insertId });
+      });
+    });
+  };
+
+module.exports = {
+  getAllInjuries,
+  getInjuriesByRescuer,
+  insertInjury
+};

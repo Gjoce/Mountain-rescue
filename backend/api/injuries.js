@@ -1,29 +1,16 @@
-const InjuriesController = require('../controllers/injuriesController');
+// routes/injuryRoutes.js
 const express = require('express');
-const router = express.Router(); // Ensure this line is present
+const injuryController = require('../controllers/injuriesController');
 
-module.exports = (db) => {
-    const controller = new InjuriesController(db); // Pass db connection to the controller
+const router = express.Router();
 
-    // Get all injuries
-    router.get('/', async (req, res) => {
-        try {
-            await controller.getAllInjuries(req, res, db); // Pass req, res, and db to controller
-        } catch (error) {
-            console.error('Error fetching injuries:', error); // Log error for debugging
-            res.status(500).json({ message: 'Error fetching injuries', error });
-        }
-    });
+// Route to get all injuries (admin view)
+router.get('/injuries', injuryController.getAllInjuries);
 
-    // Register a new injury
-    router.post('/', async (req, res) => {
-        try {
-            await controller.registerInjury(req, res, db); // Pass req, res, and db to controller
-        } catch (error) {
-            console.error('Error registering injury:', error); // Log error for debugging
-            res.status(500).json({ message: 'Error registering injury', error });
-        }
-    });
+// Route to get injuries by rescuer ID
+router.get('/injuries/rescuer/:rescuer_id', injuryController.getInjuriesByRescuer);
 
-    return router; // Return the router at the end
-};
+// Route to insert a new injury
+router.post('/injuries', injuryController.insertInjury);
+
+module.exports = router;

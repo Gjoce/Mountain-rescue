@@ -1,53 +1,63 @@
-class InjuryModel {
-    // Fetch all injuries from the database
-    static getAll(db) {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM injuries', (error, results) => {
-                if (error) {
-                    console.error('Error fetching injuries:', error);
-                    return reject(error);
-                }
-                // Log the result to see what you're getting
-                console.log('Query results:', results);
+// models/injuryModel.js
+const db = require('../config/db');
 
-                // Resolve the promise with the results (rows)
-                resolve(results);
-            });
-        });
-    }
+// Get all injuries (for admin)
+const getAllInjuries = (callback) => {
+  const query = 'SELECT * FROM injuries';
+  db.query(query, (err, results) => {
+    if (err) return callback(err);
+    callback(null, results);
+  });
+};
 
-    // Register a new injury in the database
-    static async register(injuryData, db) {
-        const { 
-            rescuer_id,
-            rescuer_name, 
-            ski_run, 
-            injury_points, 
-            medical_comment, 
-            rescuer_signature, 
-            name,  
-            birth_date, 
-            ski_card_photo 
-        } = injuryData;
+// Get injuries for a specific rescuer
+const getInjuriesByRescuer = (rescuer_id, callback) => {
+  const query = 'SELECT * FROM injuries WHERE rescuer_id = ?';
+  db.query(query, [rescuer_id], (err, results) => {
+    if (err) return callback(err);
+    callback(null, results);
+  });
+};
 
-        // Use a prepared statement to insert the injury record
-        await db.query(
-            `INSERT INTO injuries 
-            (rescuer_id, rescuer_name, ski_run, injury_points, medical_comment, rescuer_signature, name, birth_date, ski_card_photo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-            [
-                rescuer_id,
-                rescuer_name, 
-                ski_run, 
-                JSON.stringify(injury_points), // Ensure injury_points is properly formatted
-                medical_comment, 
-                rescuer_signature, 
-                name, 
-                birth_date, 
-                ski_card_photo
-            ]
-        );
-    }
-}
+// Insert a new injury
+const insertInjury = (injuryData, callback) => {
+  const query = `INSERT INTO injuries 
+    (rescuer_id, injury_points, medical_comment, rescuer_signature, name, birth_date, ski_card_photo, ski_run, rescuer_name) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-module.exports = InjuryModel;
+  const values = [
+    injuryData.rescuer_id,
+    JSON.stringify(injuryData.injury_points),
+    injuryData.medical_comment,
+    injuryData.rescuer_signature,
+    injuryData.name,
+    injuryData.birth_date,
+    injuryData.ski_card_photo,
+    injuryData.ski_run,
+    injuryData.rescuer_name
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) return callback(err);
+    callback(null, result);
+  });
+};
+
+const getRescuerNameById = (rescuer_id, callback) => {
+    const query = 'SELECT name FROM rescuers WHERE id = ?'; 
+    db.query(query, [rescuer_id], (err, result) => {
+      if (err) return callback(err);
+      if (result.length > 0) {
+        callback(null, result[0].name);
+      } else {
+        callback(new Error('Rescuer not found'));
+      }
+    });
+  };
+
+module.exports = {
+  getAllInjuries,
+  getInjuriesByRescuer,
+  insertInjury,
+  getRescuerNameById
+};
