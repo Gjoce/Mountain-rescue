@@ -1,17 +1,16 @@
-// server.js
 const express = require('express');
-const injuryRoutes = require('./api/injuries');
-const bodyParser = require('body-parser');
-
+const injuryController = require('./controllers/injuriesController'); // Adjust the path as needed
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(bodyParser.json());
+app.use(express.json()); // To parse JSON bodies
 
-// Routes
-app.use('/api', injuryRoutes);
+// Define your routes
+app.get('/api/injuries', injuryController.getAllInjuries); // Get all injuries
+app.post('/api/injuries', injuryController.insertInjury); // Insert a new injury
+app.get('/api/injuries/rescuer/:rescuer_id', injuryController.getInjuriesByRescuer); // Get injuries by rescuer ID
+
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

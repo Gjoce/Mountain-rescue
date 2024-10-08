@@ -1,16 +1,14 @@
-// routes/injuryRoutes.js
 const express = require('express');
-const injuryController = require('../controllers/injuriesController');
-
 const router = express.Router();
+const injuriesController = require('../controllers/injuriesController');
 
-// Route to get all injuries (admin view)
-router.get('/injuries', injuryController.getAllInjuries);
+// Get all injuries (admin)
+router.get('/admin/injuries', injuriesController.getAllInjuries);
 
-// Route to get injuries by rescuer ID
-router.get('/injuries/rescuer/:rescuer_id', injuryController.getInjuriesByRescuer);
+// Insert a new injury
+router.post('/injuries', injuriesController.insertInjury);
 
-// Route to insert a new injury
-router.post('/injuries', injuryController.insertInjury);
+// Get specific injuries submitted by a rescuer
+router.get('/injuries/:rescuer_id', injuriesController.getInjuriesByRescuer);
 
 module.exports = router;
