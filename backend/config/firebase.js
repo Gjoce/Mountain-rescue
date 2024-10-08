@@ -10,7 +10,7 @@ try {
     console.error('Error initializing Firebase Admin SDK:', error);
     throw error; // Rethrow the error or handle it appropriately
   }
-  
 
+  
 const db = admin.firestore();
 module.exports = db;

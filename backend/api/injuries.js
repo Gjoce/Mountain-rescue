@@ -6,8 +6,17 @@ const { verifyFirebaseToken } = require('./login'); // Correctly import the midd
 // Protect all routes under this router with verifyFirebaseToken
 router.use(verifyFirebaseToken);
 
+// Admin verification middleware
+const verifyAdmin = (req, res, next) => {
+  if (!req.user.admin) {
+    return res.status(403).json({ message: 'Access denied: Admins only' });
+  }
+  next();
+};
+
 // Get all injuries (admin)
-router.get('/admin', injuriesController.getAllInjuries);
+router.get('/admin', verifyAdmin, injuriesController.getAllInjuries);
+
 
 // Insert a new injury
 router.post('/', injuriesController.insertInjury);
