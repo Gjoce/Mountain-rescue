@@ -1,0 +1,99 @@
+body {
+    background: url('../images/foggy-mountain.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 150px; 
+    color: #fff;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+table th {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+table tr:hover {
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+}
+
+/* Hidden details row styling */
+.details-row {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #000000;
+}
+
+.details-row td {
+    text-align: left;
+    padding: 15px;
+}
+
+.logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+.back-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
