@@ -1,5 +1,5 @@
- // Firebase configuration
- const firebaseConfig = {
+// Firebase configuration
+const firebaseConfig = {
     apiKey: "AIzaSyCM__9j2n3QBf0Cb_NxDRncnx8u6i1QP_E",
     authDomain: "mountain-rescue-863ea.firebaseapp.com",
     projectId: "mountain-rescue-863ea",
@@ -11,6 +11,7 @@
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore(); // Initialize Firestore
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -21,7 +22,18 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     try {
         // Sign in with Firebase Authentication
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        const idToken = await userCredential.user.getIdToken();
+        
+        // Get user information
+        const user = userCredential.user; // This will contain the user object
+        const uid = user.uid; // Get the user's UID
+        const idToken = await user.getIdToken(); // Get the ID token
+
+        // Store user UID in Firestore
+        await db.collection('users').doc(uid).set({
+            email: user.email,
+            uid: uid,
+            // You can add more user-related information here if needed
+        }, { merge: true }); // Use merge to prevent overwriting existing data
 
         // Send the ID token to the backend for verification
         const response = await fetch('http://localhost:3000/api/login', {

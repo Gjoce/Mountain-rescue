@@ -15,6 +15,11 @@ router.post('/register', verifyFirebaseToken, verifyAdmin, async (req, res) => {
     try {
         const { email, password, name, isAdmin } = req.body;
 
+        // Validate the request body
+        if (!email || !password || !name) {
+            return res.status(400).json({ message: 'Email, password, and name are required.' });
+        }
+
         // Create user in Firebase Auth
         const userRecord = await admin.auth().createUser({
             email,
@@ -25,8 +30,9 @@ router.post('/register', verifyFirebaseToken, verifyAdmin, async (req, res) => {
         await admin.firestore().collection('users').doc(userRecord.uid).set({
             name,
             email,
+            uid: userRecord.uid, // Store the user's UID here
             role: isAdmin ? 'admin' : 'rescuer', // Set role based on isAdmin checkbox
-        });
+        }, { merge: true }); // Merge option to prevent overwriting existing data
 
         // Set custom claims for the new user
         await admin.auth().setCustomUserClaims(userRecord.uid, { admin: isAdmin });
