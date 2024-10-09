@@ -29,3 +29,13 @@ h1 {
     color: red;
     text-align: center;
 }
+
+/* Logout button styling */
+.logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    width: auto;
+}

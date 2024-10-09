@@ -1,31 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Rescuer</title>
+    <title>Mountain Rescue Login</title>
+
+
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Register New Rescuer</h1>
-    <form id="registerForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+    <button id="logout" class="btn btn-danger logout-btn">Logout</button> <!-- Logout button in the top-right corner -->
+    <div class="login-container">
+            <h1 class="text-center mb-4">Register New Rescuer</h1>
+            <form id="registerForm">
+            
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
 
-        <label for="isAdmin">Admin:</label>
-        <input type="checkbox" id="isAdmin" name="isAdmin"><br><br>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="isAdmin" name="isAdmin">
+                <label class="form-check-label" for="isAdmin">Admin</label>
+            </div>
 
-        <button type="submit">Register Rescuer</button>
-    </form>
+            <button type="submit" class="btn btn-primary mt-3">Register Rescuer</button>
+        </form>
 
-    <div id="register-error" style="color: red;"></div>
+        <button onclick="history.back()" class="btn btn-secondary mt-3">Back</button>
+    </div>
 
-    <script src="javascript/addRescuer.js">
-    </script>
+
+    <!-- Firebase and JavaScript File -->
+    <script src="javascript/addRescuer.js"></script>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+

@@ -32,8 +32,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         await db.collection('users').doc(uid).set({
             email: user.email,
             uid: uid,
-            // You can add more user-related information here if needed
-        }, { merge: true }); // Use merge to prevent overwriting existing data
+        }, { merge: true });
+
+        // Store the UID in localStorage
+        localStorage.setItem('userUID', uid);  // Save UID to localStorage
 
         // Send the ID token to the backend for verification
         const response = await fetch('http://localhost:3000/api/login', {
@@ -56,11 +58,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             }
         } else {
             const errorData = await response.json();
-            console.error('Login error:', errorData);
             document.getElementById('login-error').textContent = 'Login failed. ' + (errorData.message || 'Please check your credentials.');
         }
     } catch (error) {
-        console.error('Login error:', error);
         document.getElementById('login-error').textContent = 'An error occurred: ' + error.message;
     }
 });

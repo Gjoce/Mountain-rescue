@@ -34,3 +34,9 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         document.getElementById('register-error').textContent = 'Registration failed: ' + error.message;
     }
 });
+
+document.getElementById('logout').addEventListener('click', () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userUID');
+    window.location.href = 'index.html'; // Redirect to login page
+});

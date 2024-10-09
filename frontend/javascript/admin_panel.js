@@ -8,5 +8,6 @@ if (!authToken) {
 // Logout function
 document.getElementById('logout').addEventListener('click', () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userUID');
     window.location.href = 'index.html'; // Redirect to login page
 });
