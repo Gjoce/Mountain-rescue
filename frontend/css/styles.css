@@ -1,0 +1,31 @@
+body {
+    background: url('../images/foggy-mountain.jpg') no-repeat center center fixed; /* Add your image URL here */
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff; /* Ensure text stands out on the background */
+}
+.login-container {
+    background: rgba(0, 0, 0, 0.7); /* Transparent black background for readability */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 100%;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.btn-primary {
+    width: 100%;
+}
+.form-control {
+    margin-bottom: 10px;
+}
+#login-error {
+    color: red;
+    text-align: center;
+}

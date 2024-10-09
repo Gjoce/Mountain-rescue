@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <h1>Admin Panel</h1>
-    <a href="addRescuer.html">Register Rescuer</a> <!-- Link to the registration page -->
-    <button id="logout">Logout</button>
+    <button id="logout" class="btn btn-danger logout-btn">Logout</button> <!-- Logout button in the top-right corner -->
 
-    <script>
-        // Check if the user is logged in
-        const authToken = localStorage.getItem('authToken');
-        if (!authToken) {
-            alert('You must be logged in to access this page.');
-            window.location.href = 'index.html'; // Redirect to login page
-        }
+    <div class="login-container">
+        <h1>Admin Panel</h1>
+        <a href="registerInjury.html" class="btn btn-primary">Register New Injury</a> <!-- Big button for registering injuries -->
+        <a href="injuryHistory.html" class="btn btn-secondary">History of Reported Injuries</a> <!-- Button for injury history -->
+        <a href="coordinationPanel.html" class="btn btn-info">Coordination Panel</a> <!-- Coordination panel button -->
+    </div>
 
-        // Logout function
-        document.getElementById('logout').addEventListener('click', () => {
-            localStorage.removeItem('authToken');
-            window.location.href = 'index.html'; // Redirect to login page
-        });
-    </script>
+    <!-- JavaScript File -->
+    <script src="javascript/admin_panel.js"></script>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
