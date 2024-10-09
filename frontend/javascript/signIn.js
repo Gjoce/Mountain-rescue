@@ -32,10 +32,18 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         await db.collection('users').doc(uid).set({
             email: user.email,
             uid: uid,
+            // You may add a name field here if it isn't stored already
         }, { merge: true });
 
         // Store the UID in localStorage
         localStorage.setItem('userUID', uid);  // Save UID to localStorage
+
+        // Fetch user's name from Firestore
+        const userDoc = await db.collection('users').doc(uid).get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            localStorage.setItem('userName', userData.name || ''); // Store the user's name in localStorage
+        }
 
         // Send the ID token to the backend for verification
         const response = await fetch('http://localhost:3000/api/login', {

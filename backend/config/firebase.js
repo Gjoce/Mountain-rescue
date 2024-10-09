@@ -5,11 +5,14 @@ const serviceAccount = require('../keys/mountain-rescue-863ea-firebase-adminsdk-
 try {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-    });
+      storageBucket: 'mountain-rescue-863ea.appspot.com'
+   });
   } catch (error) {
     console.error('Error initializing Firebase Admin SDK:', error);
     throw error; // Rethrow the error or handle it appropriately
   }
+
+ 
 
   
 const db = admin.firestore();

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Injury</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .signature-pad {
+            border: 2px solid #000;
+            width: 100%;
+            height: 200px;
+        }
+        #clear-btn {
+            margin-top: 10px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-group label {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Report Injury</h1>
+
+    <form id="injuryForm" enctype="multipart/form-data">
+        <!-- Ski Run Dropdown -->
+        <div class="input-group">
+            <label for="ski_run">Ski Run:</label>
+            <select id="ski_run" name="ski_run" required>
+                <option value="" disabled selected>Select Ski Run</option>
+                <option value="Run 1">Run 1</option>
+                <option value="Run 2">Run 2</option>
+                <option value="Run 3">Run 3</option>
+                <!-- Add more ski runs as needed -->
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="name">Injured Person's Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="input-group">
+            <label for="birth_date">Birth Date:</label>
+            <input type="date" id="birth_date" name="birth_date" required>
+        </div>
+
+        <div class="input-group">
+            <label for="ski_card_photo">Ski Card Photo:</label>
+            <input type="file" id="ski_card_photo" name="ski_card_photo" accept="image/*" capture="camera" required>
+        </div>
+
+        <div class="input-group">
+            <label for="medical_comment">Medical Comment:</label>
+            <textarea id="medical_comment" name="medical_comment" required></textarea>
+        </div>
+
+        <h3>Injury Points:</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="injury_points" value="Head"> Head</label>
+            <label><input type="checkbox" name="injury_points" value="Arm"> Arm</label>
+            <label><input type="checkbox" name="injury_points" value="Leg"> Leg</label>
+            <label><input type="checkbox" name="injury_points" value="Torso"> Torso</label>
+        </div>
+
+        <h3>Sign Here:</h3>
+        <canvas id="signaturePad" class="signature-pad"></canvas>
+        <button type="button" id="clear-btn">Clear Signature</button>
+
+        <button type="submit">Submit Injury</button>
+    </form>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+<script src="javascript/injuries.js">
+
+</script>
+
+</body>
+</html>
