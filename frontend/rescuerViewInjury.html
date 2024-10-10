@@ -11,18 +11,27 @@
     <button onclick="history.back()" class="btn btn-secondary back-btn">Back</button>
   <div class="container mt-5">
     <h1 class="mb-4 text-dark">My Registered Injuries</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Injury ID</th>
-          <th scope="col">Ski Run</th>
-          <th scope="col">Timestamp</th>
-        </tr>
-      </thead>
-      <tbody id="injuries-list">
-        <!-- Injuries will be dynamically loaded here -->
-      </tbody>
-    </table>
+    
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Injury ID</th>
+            <th scope="col">Ski run</th>
+            <th scope="col">Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="injuries-list">
+          <!-- Injuries will be dynamically loaded here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Pagination Controls -->
+    <nav>
+      <div id="pagination" class="pagination"></div>
+
+    </nav>
   </div>
 
   <script src="javascript/rescuerInjuryView.js">

@@ -1,54 +1,101 @@
-// Fetch injuries as an admin
-fetch('http://localhost:3000/api/injuries/admin', {
-  method: 'GET',
-  headers: {
+let currentPage = 1;
+const limit = 5;
+
+function fetchInjuries(page = 1) {
+  fetch(`http://localhost:3000/api/injuries/admin?page=${page}&limit=${limit}`, {
+    method: 'GET',
+    headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-  }
-})
-.then(response => response.json())
-.then(data => {
-  const injuriesList = document.getElementById('injuries-list');
-  
-  data.forEach(injury => {
-      const timestamp = injury.timestamp ? new Date(injury.timestamp._seconds * 1000).toLocaleString() : 'N/A';
-      
-      // Create the basic row (ID, Rescuer Name, Timestamp)
-      const row = document.createElement('tr');
-      row.innerHTML = `
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    const injuriesList = document.getElementById('injuries-list');
+    injuriesList.innerHTML = ''; // Clear previous entries
+
+    // Log data for debugging
+    console.log('Fetched data:', data);
+
+    if (data.data && data.data.length > 0) {
+      data.data.forEach(injury => {
+        const timestamp = injury.timestamp ? new Date(injury.timestamp._seconds * 1000).toLocaleString() : 'N/A';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
           <td>${injury.id}</td>
-          <td>${injury.rescuer_name}</td> <!-- Added rescuer name here -->
+          <td>${injury.rescuer_name}</td>
           <td>${timestamp}</td>
-      `;
-      
-      // Create the hidden details row
-      const detailsRow = document.createElement('tr');
-      detailsRow.classList.add('details-row');
-      detailsRow.innerHTML = `
+        `;
+
+        // Create the hidden details row
+        const detailsRow = document.createElement('tr');
+        detailsRow.classList.add('details-row');
+        detailsRow.innerHTML = `
           <td colspan="3">
-              <strong>Patient Name:</strong> ${injury.name} <br>
-              <strong>Injury Points:</strong> ${injury.injury_points} <br>
-              <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
-              <strong>Birth Date:</strong> ${injury.birth_date} <br>
-              <strong>Ski Run:</strong> ${injury.ski_run} <br>
-              <strong>Ski Card Photo:</strong> <img src="data:image/jpeg;base64,${injury.ski_card_photo}" alt="Ski Card Photo" width="100"> <br>
-              <strong>Rescuer Signature:</strong> <img src="data:image/jpeg;base64,${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+            <strong>Patient Name:</strong> ${injury.patient_name} <br>
+            <strong>Injury Points:</strong> ${injury.injury_points} <br>
+            <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+            <strong>Birth Date:</strong> ${injury.birth_date} <br>
+            <strong>Ski Run:</strong> ${injury.ski_run} <br>
+            <strong>Ski Card Photo:</strong>
+            <a href="${injury.ski_card_photo}" target="_blank">
+              <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
+            </a>
+            <br>
+            <strong>Rescuer Signature:</strong>
+            <a href="${injury.rescuer_signature}" target="_blank">
+              <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+            </a>
           </td>
-      `;
+        `;
 
-      // Append rows to the table
-      injuriesList.appendChild(row);
-      injuriesList.appendChild(detailsRow);
+        injuriesList.appendChild(row);
+        injuriesList.appendChild(detailsRow);
 
-      // Toggle display of details row on click
-      row.addEventListener('click', () => {
+        row.addEventListener('click', () => {
           detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+        });
       });
-  });
-})
-.catch(error => console.error('Error fetching injuries:', error));
+    } else {
+      injuriesList.innerHTML = `<tr><td colspan="3">No injuries found.</td></tr>`;
+    }
 
-const authToken = localStorage.getItem('authToken');
-if (!authToken) {
-  alert('You must be logged in to access this page.');
-  window.location.href = 'index.html'; // Redirect to login page
+    // Update pagination controls
+    updatePagination(data.currentPage, data.totalPages);
+  })
+  .catch(error => console.error('Error fetching injuries:', error));
 }
+
+// Call this function to update the pagination buttons (for example)
+function updatePagination(currentPage, totalPages) {
+  const paginationElement = document.getElementById('pagination');
+  paginationElement.innerHTML = ''; // Clear previous pagination
+
+  // Create previous button if applicable
+  if (currentPage > 1) {
+    const prevButton = document.createElement('button');
+    prevButton.innerHTML = 'Previous';
+    prevButton.onclick = () => fetchInjuries(currentPage - 1);
+    paginationElement.appendChild(prevButton);
+  }
+
+  // Generate numbered page buttons
+  for (let i = 1; i <= totalPages; i++) {
+    const pageButton = document.createElement('button');
+    pageButton.innerHTML = i;
+    pageButton.className = (i === currentPage) ? 'active-page' : ''; // Highlight current page
+    pageButton.onclick = () => fetchInjuries(i); // Fetch injuries for the clicked page
+    paginationElement.appendChild(pageButton);
+  }
+
+  // Create next button if applicable
+  if (currentPage < totalPages) {
+    const nextButton = document.createElement('button');
+    nextButton.innerHTML = 'Next';
+    nextButton.onclick = () => fetchInjuries(currentPage + 1);
+    paginationElement.appendChild(nextButton);
+  }
+}
+
+
+fetchInjuries(currentPage);

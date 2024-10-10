@@ -4,16 +4,35 @@ const admin = require('firebase-admin'); // Import Firestore instance
 // Get all injuries for admin
 exports.getAllInjuries = async (req, res) => {
   try {
+    const { page = 1, limit = 5 } = req.query; // Default to page 1, limit 5 if not provided
+
     const injuriesSnapshot = await db.collection('injuries').get();
     let injuries = [];
+
     injuriesSnapshot.forEach((doc) => {
       injuries.push({ id: doc.id, ...doc.data() });
     });
-    res.status(200).json(injuries);
+
+    // Log total injuries count for debugging
+    console.log('Total injuries:', injuries.length);
+
+    // Pagination logic
+    const startIndex = (page - 1) * limit;
+    const paginatedInjuries = injuries.slice(startIndex, startIndex + parseInt(limit));
+
+    // Send paginated data along with current page and total page count
+    res.status(200).json({
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(injuries.length / limit),
+      data: paginatedInjuries,
+    });
   } catch (error) {
+    console.error('Error fetching injuries:', error);
     res.status(500).json({ message: 'Error fetching injuries', error });
   }
 };
+
+
 
 // Insert a new injury
 exports.insertInjury = async (req, res) => {
@@ -60,15 +79,32 @@ exports.insertInjury = async (req, res) => {
 exports.getInjuriesByRescuer = async (req, res) => {
   try {
     const uid = req.params.uid; // Rescuer's ID from the route params
-    const injuriesSnapshot = await db.collection('injuries').where('uid', '==', uid).get();
-
+    const { page = 1, limit = 5 } = req.query; 
+    const injuriesSnapshot = await db.collection('injuries').where('uid', '==', uid).get(); // Add pagination limit
     let injuries = [];
+
     injuriesSnapshot.forEach((doc) => {
       injuries.push({ id: doc.id, ...doc.data() });
     });
 
-    res.status(200).json(injuries);
+    // Log total injuries count for debugging
+    console.log('Total injuries:', injuries.length);
+
+    // Pagination logic
+    const startIndex = (page - 1) * limit;
+    const paginatedInjuries = injuries.slice(startIndex, startIndex + parseInt(limit));
+
+    // Send paginated data along with current page and total page count
+    res.status(200).json({
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(injuries.length / limit),
+      data: paginatedInjuries,
+    });
+
+   
   } catch (error) {
     res.status(500).json({ message: 'Error fetching injuries for rescuer', error });
   }
 };
+
+

@@ -97,3 +97,23 @@ table tr:hover {
 .back-btn:hover {
     background-color: #5a6268;
 }
+
+#pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #pagination button.active-page {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  #pagination button:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  

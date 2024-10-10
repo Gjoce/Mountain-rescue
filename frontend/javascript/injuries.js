@@ -26,6 +26,7 @@ document.getElementById('injuryForm').addEventListener('submit', async (event) =
     event.preventDefault();
 
     // Get form data
+    const name = document.getElementById('name').value;
     const skiRun = document.getElementById('ski_run').value;
     const birthDate = document.getElementById('birth_date').value;
     const medicalComment = document.getElementById('medical_comment').value;
@@ -63,6 +64,7 @@ document.getElementById('injuryForm').addEventListener('submit', async (event) =
         // Save injury report in Firestore
         await firebase.firestore().collection('injuries').add({
             uid: userUID,  // Assuming you're storing the user UID somewhere
+            patient_name: name,
             ski_run: skiRun,
             rescuer_name: rescuerName, // Add rescuer name to the injury report
             birth_date: birthDate,
