@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,98 +9,147 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/injury.css">
 </head>
+
 <body>
-    <button onclick="history.back()" class="btn-secondary  back-btn">Back</button>
+    <button onclick="history.back()" class="btn-secondary back-btn">Back</button>
 
-<div class="container">
-    <h1 class="mb-4 text-center">Report Injury</h1>
+    <div class="container">
+        <h1 class="mb-4 text-center">Report Injury</h1>
 
-    <form id="injuryForm" enctype="multipart/form-data">
-        <!-- Ski Run Dropdown -->
-        <div class="mb-3">
-            <label for="ski_run" class="form-label">Ski Run:</label>
-            <select class="form-select" id="ski_run" name="ski_run" required>
-                <option value="" disabled selected>Select Ski Run</option>
-                <option value="Run 1">Run 1</option>
-                <option value="Run 2">Run 2</option>
-                <option value="Run 3">Run 3</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Injured Person's Name:</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="birth_date" class="form-label">Birth Date:</label>
-            <input type="date" class="form-control" id="birth_date" name="birth_date" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="ski_card_photo" class="form-label">Ski Card Photo:</label>
-            <input type="file" class="form-control" id="ski_card_photo" name="ski_card_photo" accept="image/*" capture="camera" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="medical_comment" class="form-label">Medical Comment:</label>
-            <textarea class="form-control" id="medical_comment" name="medical_comment" required></textarea>
-        </div>
-
-        <h3>Injury Points:</h3>
-        <div class="checkbox-group">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="injury_points" value="Head" id="injuryHead">
-                <label class="form-check-label" for="injuryHead">Head</label>
+        <form id="injuryForm" enctype="multipart/form-data">
+            <!-- Ski Run Dropdown -->
+            <div class="mb-3">
+                <label for="ski_run" class="form-label">Ski Run:</label>
+                <select class="form-select" id="ski_run" name="ski_run" required>
+                    <option value="" disabled selected>Select Ski Run</option>
+                    <option value="Run 1">Run 1</option>
+                    <option value="Run 2">Run 2</option>
+                    <option value="Run 3">Run 3</option>
+                </select>
             </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="injury_points" value="Arm" id="injuryArm">
-                <label class="form-check-label" for="injuryArm">Arm</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="injury_points" value="Leg" id="injuryLeg">
-                <label class="form-check-label" for="injuryLeg">Leg</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="injury_points" value="Torso" id="injuryTorso">
-                <label class="form-check-label" for="injuryTorso">Torso</label>
-            </div>
-        </div>
 
-        <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Submit Injury</button>
-    </form>
-</div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Injured Person's Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
 
-<!-- Signature Pad Modal -->
-<div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="signatureModalLabel">Sign Here</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="mb-3">
+                <label for="birth_date" class="form-label">Birth Date:</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
             </div>
-            <div class="modal-body">
-                <canvas id="signaturePad" class="signature-pad"></canvas>
-                <button type="button" id="clear-btn" class="btn btn-warning mt-3">Clear Signature</button>
+
+            <div class="mb-3">
+                <label for="ski_card_photo" class="form-label">Ski Card Photo:</label>
+                <input type="file" class="form-control" id="ski_card_photo" name="ski_card_photo" accept="image/*" capture="camera" required>
             </div>
-            <div class="modal-footer">
-                <button type="button" id="confirmSignature" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+
+            <h3 class="text-center">Injury Points:</h3>
+
+            <div class="injury-points-container">
+                <!-- Right Side: Big Letter R and Body Part Checkboxes -->
+                <div class="left-column">
+                    <div class="text-center letter">R</div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Clavicule" id="claviculeR">
+                        <label class="form-check-label" for="claviculeL">Clavicule</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Shoulder" id="shoulderR">
+                        <label class="form-check-label" for="shoulderL">Shoulder</label>
+                    </div>
+                    <!-- Add more checkboxes here -->
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Stopalo" id="stopaloR">
+                        <label class="form-check-label" for="stopaloL">Stopalo</label>
+                    </div>
+                </div>
+
+                <!-- Center: PNG Image and Central Checkboxes -->
+                <div class="center-column text-center">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Head" id="head">
+                        <label class="form-check-label" for="head">Head</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Neck" id="neck">
+                        <label class="form-check-label" for="neck">Neck</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Thorax" id="thorax">
+                        <label class="form-check-label" for="thorax">Thorax</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Abdomen" id="abdomen">
+                        <label class="form-check-label" for="abdomen">Abdomen</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Spine" id="spine">
+                        <label class="form-check-label" for="spine">Spine</label>
+                    </div>
+                    <img src="./images/human-body-frontal.png" alt="Body Diagram" class="body-diagram">
+                </div>
+
+                <!-- Left Side: Big Letter L and Body Part Checkboxes -->
+                <div class="right-column">
+                    <div class="text-center letter">L</div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Clavicule" id="claviculeL">
+                        <label class="form-check-label" for="claviculeR">Clavicule</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Shoulder" id="shoulderL">
+                        <label class="form-check-label" for="shoulderR">Shoulder</label>
+                    </div>
+                    <!-- Add more checkboxes here -->
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Stopalo" id="stopaloL">
+                        <label class="form-check-label" for="stopaloR">Stopalo</label>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <h3>Type of Injury:</h3>
+            <div id="injury-type-dropdowns"></div>
+            <div class="mb-3">
+                <label for="medical_comment" class="form-label">Medical Comment:</label>
+                <textarea class="form-control" id="medical_comment" name="medical_comment" required></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Submit Injury</button>
+
+            <!-- Signature Pad Modal -->
+            <div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="signatureModalLabel">Sign Here</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <canvas id="signaturePad" class="signature-pad"></canvas>
+                            <button type="button" id="clear-btn" class="btn btn-warning mt-3">Clear Signature</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="confirmSignature" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-</div>
 
-<!-- Firebase Configuration -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <!-- Firebase and JS Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- SignaturePad library -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
-<script src="javascript/injuries.js">
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="javascript/injuries.js"></script>
 </body>
+
 </html>

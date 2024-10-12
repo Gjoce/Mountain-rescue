@@ -60,3 +60,35 @@ body {
         padding: 20px;
     }
 }
+
+.injury-points-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.left-column, .right-column {
+    width: 30%;
+}
+
+.center-column {
+    width: 40%;
+}
+
+.body-diagram {
+    width: 100%; /* Adjust the size of the PNG */
+    margin-top: 20px;
+}
+
+.letter {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.injury-type {
+    margin-top: 30px;
+}
+
+.checkbox-group {
+    margin-bottom: 20px;
+}

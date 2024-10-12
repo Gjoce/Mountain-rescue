@@ -13,64 +13,68 @@ function fetchInjuries(page = 1) {
     const injuriesList = document.getElementById('injuries-list');
     injuriesList.innerHTML = ''; // Clear previous entries
 
-    console.log('Fetched data:', data); // Log for debugging
-
     if (data.data && data.data.length > 0) {
       data.data.forEach(injury => {
         const timestamp = injury.timestamp ? new Date(injury.timestamp._seconds * 1000).toLocaleString() : 'N/A';
 
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${injury.id}</td>
+          <td>${injury.patient_name}</td>
           <td>${injury.rescuer_name}</td>
           <td>${timestamp}</td>
         `;
 
-        // Create the hidden details row
-        const detailsRow = document.createElement('tr');
-        detailsRow.classList.add('details-row');
-        detailsRow.innerHTML = `
-          <td colspan="3">
-            <strong>Patient Name:</strong> ${injury.patient_name} <br>
-            <strong>Injury Points:</strong> ${injury.injury_points} <br>
-            <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
-            <strong>Birth Date:</strong> ${injury.birth_date} <br>
-            <strong>Ski Run:</strong> ${injury.ski_run} <br>
-            <strong>Ski Card Photo:</strong>
-            <a href="${injury.ski_card_photo}" target="_blank">
-              <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
-            </a>
-            <br>
-            <strong>Rescuer Signature:</strong>
-            <a href="${injury.rescuer_signature}" target="_blank">
-              <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
-            </a>
-            <br>
-            <button class="generate-pdf">Generate PDF</button>
-          </td>
-        `;
-
-        injuriesList.appendChild(row);
-        injuriesList.appendChild(detailsRow);
-
-        // Toggle details visibility on row click
+        // Handle row click to show modal with injury details
         row.addEventListener('click', () => {
-          detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+          showInjuryDetailsModal(injury);
         });
 
-        // Handle PDF generation
-        const pdfButton = detailsRow.querySelector('.generate-pdf');
-        pdfButton.addEventListener('click', () => generatePDF(injury));
+        injuriesList.appendChild(row);
       });
     } else {
       injuriesList.innerHTML = `<tr><td colspan="3">No injuries found.</td></tr>`;
     }
 
-    // Update pagination controls
     updatePagination(data.currentPage, data.totalPages);
   })
   .catch(error => console.error('Error fetching injuries:', error));
 }
+
+function showInjuryDetailsModal(injury) {
+  const modalDetails = document.getElementById('modal-injury-details');
+  modalDetails.innerHTML = `
+    <strong>Patient Name:</strong> ${injury.patient_name} <br>
+    <strong>Birth Date:</strong> ${injury.birth_date} <br>
+    <strong>Ski Run:</strong> ${injury.ski_run} <br>
+    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+    <strong>ID of injury:</strong> ${injury.id}<br>
+    <strong>Timestamp:</strong> ${injury.timestamp}<br> 
+
+    <strong>Medical information</strong><br>
+    <strong>Injured:</strong> ${injury.injury_points} <br>
+    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+    
+    
+    <strong>Ski Card Photo:</strong>
+    <a href="${injury.ski_card_photo}" target="_blank">
+      <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
+    </a><br>
+    <strong>Rescuer Signature:</strong>
+    <a href="${injury.rescuer_signature}" target="_blank">
+      <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+    </a><br>
+    <button class="generate-pdf btn btn-primary">Generate PDF</button>
+  `;
+
+  // Show the modal
+  const injuryModal = new bootstrap.Modal(document.getElementById('injuryDetailsModal'));
+  injuryModal.show();
+
+  // Handle PDF generation within the modal
+  const pdfButton = modalDetails.querySelector('.generate-pdf');
+  pdfButton.addEventListener('click', () => generatePDF(injury));
+}
+
 
 // Generate PDF function
 // Generate PDF function with formal structure
