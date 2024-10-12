@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    color: #fff;
+    color: #ffffff;
     position: relative;
 }
 
@@ -72,6 +72,17 @@ h1 {
 .form-group{
     text-align: left;
 }
+.footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+    width: 100%; /* Ensures it spans the full width */
+    padding: 20px; /* Padding for spacing */
+    background-color: transparent; /* No background color */
+    color: white; /* Change text color to white */
+    text-align: center; /* Center the text */
+}
+
+
+
 
 
 

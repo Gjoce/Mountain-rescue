@@ -15,7 +15,18 @@ function fetchInjuries(page = 1) {
 
     if (data.data && data.data.length > 0) {
       data.data.forEach(injury => {
-        const timestamp = injury.timestamp ? new Date(injury.timestamp._seconds * 1000).toLocaleString() : 'N/A';
+        const timestamp = injury.timestamp 
+  ? new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour12: false // Set this to false for 24-hour format
+    })
+  : 'N/A';
+
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -42,18 +53,43 @@ function fetchInjuries(page = 1) {
 
 function showInjuryDetailsModal(injury) {
   const modalDetails = document.getElementById('modal-injury-details');
-  modalDetails.innerHTML = `
-    <strong>Patient Name:</strong> ${injury.patient_name} <br>
-    <strong>Birth Date:</strong> ${injury.birth_date} <br>
-    <strong>Ski Run:</strong> ${injury.ski_run} <br>
-    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
-    <strong>ID of injury:</strong> ${injury.id}<br>
-    <strong>Timestamp:</strong> ${injury.timestamp}<br> 
 
-    <strong>Medical information</strong><br>
-    <strong>Injured:</strong> ${injury.injury_points} <br>
-    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+  // Format injury_points array to display in the desired format: (side: ) (injury point: ) (type: )
+  const injuryPoints = Array.isArray(injury.injury_points)
+    ? injury.injury_points.map((inj, index) => `${index + 1}. (side: ${inj.side}) (injury point: ${inj.point}) (type: ${inj.type})`).join('<br>')
+    : (typeof injury.injury_points === 'object' && injury.injury_points !== null)
+    ? JSON.stringify(injury.injury_points)
+    : injury.injury_points;
+
+  // Center the basic information
+  modalDetails.innerHTML = `
+    <div style="text-align: center;">
+      <strong>Basic Information</strong><br>
+    </div>
+      <strong>Patient Name:</strong> ${injury.patient_name} <br>
+      <strong>Birth Date:</strong> ${injury.birth_date} <br>
+      <strong>Ski Run:</strong> ${injury.ski_run} <br>
+      <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+      <strong>ID of Injury:</strong> ${injury.id}<br>
+      <strong>Timestamp:</strong> ${new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour12: false // 24-hour format
+        })}<br>
     
+    <hr> <!-- Separation line after basic information -->
+    
+     <div style="text-align: center;">
+      <strong>Medical Information</strong><br>
+    </div>
+    <strong>Injured:</strong><br> ${injuryPoints} <br> <!-- Display formatted injuries -->
+    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+
+    <hr> <!-- Separation line after medical information -->
     
     <strong>Ski Card Photo:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
@@ -63,17 +99,20 @@ function showInjuryDetailsModal(injury) {
     <a href="${injury.rescuer_signature}" target="_blank">
       <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
     </a><br>
-    <button class="generate-pdf btn btn-primary">Generate PDF</button>
+    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+    
   `;
 
   // Show the modal
   const injuryModal = new bootstrap.Modal(document.getElementById('injuryDetailsModal'));
   injuryModal.show();
 
-  // Handle PDF generation within the modal
+  // Handle PDF generation
   const pdfButton = modalDetails.querySelector('.generate-pdf');
   pdfButton.addEventListener('click', () => generatePDF(injury));
 }
+
+
 
 
 // Generate PDF function

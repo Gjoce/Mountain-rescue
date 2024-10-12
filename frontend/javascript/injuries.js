@@ -1,35 +1,50 @@
 const injuryPoints = document.querySelectorAll('.injury-point');
-        const injuryTypeContainer = document.getElementById('injury-type-dropdowns');
+const injuryTypeContainer = document.getElementById('injury-type-dropdowns');
 
-        // Create the dropdown HTML for injury type selection
-        const injuryTypes = `
-            <label class="form-label">Select Injury Type:</label>
-            <select class="form-select" name="injury_type">
-                <option value="" disabled selected>Select Injury Type</option>
-                <option value="Sprain">Sprain</option>
-                <option value="Fracture">Fracture</option>
-                <option value="Dislocation">Dislocation</option>
-                <option value="Cut">Cut</option>
-                <option value="Bruise">Bruise</option>
-            </select>
-        `;
+// Create the dropdown HTML for injury type selection
+const injuryTypes = `
+    <label class="form-label">Select Injury Type:</label>
+    <select class="form-select" name="injury_type">
+        <option value="" disabled selected>Select Injury Type</option>
+        <option value="Sprain">Sprain</option>
+        <option value="Fracture">Fracture</option>
+        <option value="Dislocation">Dislocation</option>
+        <option value="Cut">Cut</option>
+        <option value="Bruise">Bruise</option>
+    </select>
+`;
 
-        injuryPoints.forEach(point => {
-            point.addEventListener('change', function() {
-                const injuryId = point.id;
+injuryPoints.forEach(point => {
+    const label = document.querySelector(`label[for="${point.id}"]`);  // Find the label associated with this checkbox
 
-                // If checked, add dropdown; if unchecked, remove it
-                if (point.checked) {
-                    const div = document.createElement('div');
-                    div.className = 'mb-3 injury-type';
-                    div.id = `dropdown-${injuryId}`;
-                    div.innerHTML = `<label for="${injuryId}-injury">${point.value} Injury Type:</label>` + injuryTypes;
-                    injuryTypeContainer.appendChild(div);
-                } else {
-                    document.getElementById(`dropdown-${injuryId}`).remove();
-                }
-            });
-        });
+    point.addEventListener('change', function() {
+        const injuryId = point.id;
+
+        // If checked, make the label bold and add the dropdown; if unchecked, remove the bold and the dropdown
+        if (point.checked) {
+            // Make the label bold
+            if (label) {
+                label.style.fontWeight = 'bold';
+            }
+
+            // Add the injury type dropdown
+            const div = document.createElement('div');
+            div.className = 'mb-3 injury-type';
+            div.id = `dropdown-${injuryId}`;
+            div.innerHTML = `<label for="${injuryId}-injury">${point.value} Injury Type:</label>` + injuryTypes;
+            injuryTypeContainer.appendChild(div);
+        } else {
+            // Remove the bold style from the label
+            if (label) {
+                label.style.fontWeight = 'normal';
+            }
+
+            // Remove the injury type dropdown
+            document.getElementById(`dropdown-${injuryId}`).remove();
+        }
+    });
+});
+
 
 
 
@@ -172,7 +187,15 @@ if (incompleteInjury) {
                 injuryForm.reset(); // Reset the form after submission
                 signaturePad.clear(); // Clear the signature pad after submission
                 signatureModal.hide(); // Hide the signature modal
-                window.location.href="admin_panel.html";
+                const userDoc = await db.collection('users').doc(userUID).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    if (userData.role === 'admin') {
+                        window.location.href = "admin_panel.html";  // Redirect to admin panel
+                    } else {
+                        window.location.href = "user_panel.html";   // Redirect to user panel
+                    }
+                }
             } catch (error) {
                 console.error('Error submitting injury:', error);
                 alert('Failed to submit injury.');

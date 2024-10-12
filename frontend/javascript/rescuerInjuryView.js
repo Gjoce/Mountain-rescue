@@ -12,68 +12,103 @@ function fetchRescuerInjuries(page = 1) {
   .then(response => response.json())
   .then(data => {
     const injuriesList = document.getElementById('injuries-list');
-    injuriesList.innerHTML = ''; // Clear the table before appending new data
+    injuriesList.innerHTML = ''; // Clear previous entries
 
-    // Log data for debugging
-    console.log('Fetched rescuer data:', data);
-
-    // Populate the table with the injury data
     if (data.data && data.data.length > 0) {
       data.data.forEach(injury => {
-        const timestamp = injury.timestamp ? new Date(injury.timestamp._seconds * 1000).toLocaleString() : 'N/A';
+        const timestamp = injury.timestamp 
+        ? new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour12: false // Set this to false for 24-hour format
+          })
+        : 'N/A';
 
-        // Create the main row
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${injury.id}</td>
+          <td>${injury.patient_name}</td>
           <td>${injury.ski_run}</td>
           <td>${timestamp}</td>
         `;
 
-        // Create the hidden details row
-        const detailsRow = document.createElement('tr');
-        detailsRow.classList.add('details-row');
-        detailsRow.innerHTML = `
-          <td colspan="3">
-            <strong>Patient Name:</strong> ${injury.patient_name} <br>
-            <strong>Injury Points:</strong> ${injury.injury_points} <br>
-            <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
-            <strong>Birth Date:</strong> ${injury.birth_date} <br>
-            <strong>Ski Run:</strong> ${injury.ski_run} <br>
-            <strong>Ski Card Photo:</strong>
-            <a href="${injury.ski_card_photo}" target="_blank">
-              <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
-            </a>
-            <br>
-            <strong>Rescuer Signature:</strong>
-            <a href="${injury.rescuer_signature}" target="_blank">
-              <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
-            </a>
-             <br>
-            <button class="generate-pdf">Generate PDF</button>
-          </td>
-        `;
-
-        injuriesList.appendChild(row);
-        injuriesList.appendChild(detailsRow);
-
-        // Toggle display of details row on click
+        // Handle row click to show modal with injury details
         row.addEventListener('click', () => {
-          detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+          showInjuryDetailsModal(injury);
         });
 
-         // Handle PDF generation
-         const pdfButton = detailsRow.querySelector('.generate-pdf');
-         pdfButton.addEventListener('click', () => generatePDF(injury));
+        injuriesList.appendChild(row);
       });
     } else {
       injuriesList.innerHTML = `<tr><td colspan="3">No injuries found.</td></tr>`;
     }
 
-    // Update pagination
     updatePagination(data.currentPage, data.totalPages);
   })
-  .catch(error => console.error('Error fetching rescuer injuries:', error));
+  .catch(error => console.error('Error fetching injuries:', error));
+}
+
+function showInjuryDetailsModal(injury) {
+  const modalDetails = document.getElementById('modal-injury-details');
+
+  // Format injury_points array to display in the desired format: (side: ) (injury point: ) (type: )
+  const injuryPoints = Array.isArray(injury.injury_points)
+    ? injury.injury_points.map((inj, index) => `${index + 1}. (side: ${inj.side}) (injury point: ${inj.point}) (type: ${inj.type})`).join('<br>')
+    : (typeof injury.injury_points === 'object' && injury.injury_points !== null)
+    ? JSON.stringify(injury.injury_points)
+    : injury.injury_points;
+
+  // Center the basic information
+  modalDetails.innerHTML = `
+    <div style="text-align: center;">
+      <strong>Basic Information</strong><br>
+    </div>
+      <strong>Patient Name:</strong> ${injury.patient_name} <br>
+      <strong>Birth Date:</strong> ${injury.birth_date} <br>
+      <strong>Ski Run:</strong> ${injury.ski_run} <br>
+      <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+      <strong>Timestamp:</strong> ${new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour12: false // 24-hour format
+        })}<br>
+    
+    <hr> <!-- Separation line after basic information -->
+    
+     <div style="text-align: center;">
+      <strong>Medical Information</strong><br>
+    </div>
+    <strong>Injured:</strong><br> ${injuryPoints} <br> <!-- Display formatted injuries -->
+    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+
+    <hr> <!-- Separation line after medical information -->
+    
+    <strong>Ski Card Photo:</strong>
+    <a href="${injury.ski_card_photo}" target="_blank">
+      <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
+    </a><br>
+    <strong>Rescuer Signature:</strong>
+    <a href="${injury.rescuer_signature}" target="_blank">
+      <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+    </a><br>
+    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+    
+  `;
+
+  // Show the modal
+  const injuryModal = new bootstrap.Modal(document.getElementById('injuryDetailsModal'));
+  injuryModal.show();
+
+  // Handle PDF generation
+  const pdfButton = modalDetails.querySelector('.generate-pdf');
+  pdfButton.addEventListener('click', () => generatePDF(injury));
 }
 
 // Generate PDF function with formal structure
@@ -102,7 +137,7 @@ function generatePDF(injury) {
   doc.text('Injury Details:', 20, 80);
 
   doc.setFontSize(10);
-  doc.text(`Injury Points: ${injury.injury_points}`, 20, 90);
+  doc.text(`Injury Points: ${formatInjuryPoints(injury.injury_points)}`, 20, 90);
   doc.text(`Medical Comment: ${injury.medical_comment}`, 20, 100);
   doc.text(`Ski Run: ${injury.ski_run}`, 20, 110);
 
