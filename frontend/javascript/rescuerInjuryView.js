@@ -2,6 +2,7 @@ let currentPage = 1;
 const limit = 5;
 const userId = localStorage.getItem('userUID'); // Get UID from local storage
 
+
 function fetchRescuerInjuries(page = 1) {
   fetch(`http://localhost:3000/api/injuries/${userId}?page=${page}&limit=${limit}`, {
     method: 'GET',
@@ -17,22 +18,33 @@ function fetchRescuerInjuries(page = 1) {
     if (data.data && data.data.length > 0) {
       data.data.forEach(injury => {
         const timestamp = injury.timestamp 
-        ? new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour12: false // Set this to false for 24-hour format
-          })
-        : 'N/A';
+          ? new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour12: false // Set this to false for 24-hour format
+            })
+          : 'N/A';
 
         const row = document.createElement('tr');
+        
+        // Conditional rendering for action status
+        const actionContent = injury.status === 'approved' 
+          ? 'Injury Approved' 
+          : injury.status === 'rejected' 
+          ? 'Injury Rejected' 
+          : 'Pending';  // Default to 'Pending' if no status is set
+
         row.innerHTML = `
           <td>${injury.patient_name}</td>
-          <td>${injury.ski_run}</td>
+          <td>${injury.rescuer_name}</td>
           <td>${timestamp}</td>
+          <td id="action-${injury.id}">
+            ${actionContent}
+          </td>
         `;
 
         // Handle row click to show modal with injury details
@@ -43,7 +55,7 @@ function fetchRescuerInjuries(page = 1) {
         injuriesList.appendChild(row);
       });
     } else {
-      injuriesList.innerHTML = `<tr><td colspan="3">No injuries found.</td></tr>`;
+      injuriesList.innerHTML = `<tr><td colspan="4">No injuries found.</td></tr>`;
     }
 
     updatePagination(data.currentPage, data.totalPages);

@@ -17,11 +17,16 @@ const verifyAdmin = (req, res, next) => {
 // Get all injuries (admin)
 router.get('/admin', verifyAdmin, injuriesController.getAllInjuries);
 
-
 // Insert a new injury
 router.post('/', injuriesController.insertInjury);
 
 // Get specific injuries submitted by a rescuer
 router.get('/:uid', injuriesController.getInjuriesByRescuer);
+
+// Approve an injury
+router.post('/:id/approve', verifyAdmin, injuriesController.approveInjury);
+
+// Reject an injury
+router.post('/:id/reject', verifyAdmin, injuriesController.rejectInjury);
 
 module.exports = router;
