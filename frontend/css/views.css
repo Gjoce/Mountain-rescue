@@ -118,4 +118,35 @@ table tr:hover {
     background-color: #007bff;
     color: white;
   }
+  .button-container {
+    display: flex;
+    justify-content: space-between; /* Distribute space between buttons */
+    margin: 0; /* Reset any margins */
+  }
+  
+  /* Ensure buttons take equal space */
+  .button-container .btn {
+    flex: 1; /* Each button will take equal width */
+    margin: 5px; /* Add margin between buttons */
+  }
+  
+  /* Adjust button appearance */
+  .btn {
+    min-width: 100px; /* Set a minimum width for the buttons */
+  }
+  
+  @media (max-width: 768px) {
+    .button-container {
+      flex-direction: column; /* Stack buttons on mobile */
+    }
+  
+    .button-container .btn {
+      margin-bottom: 10px; /* Add spacing between stacked buttons */
+    }
+  
+    .button-container .btn:last-child {
+      margin-bottom: 0; /* Remove margin from the last button */
+    }
+  }
+  
   

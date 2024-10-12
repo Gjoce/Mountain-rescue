@@ -105,13 +105,20 @@ exports.approveInjury = async (req, res) => {
       return res.status(404).json({ error: 'Injury not found' });
     }
 
-    await injuryRef.update({ status: 'approved' });
+    const { rescuer_signature } = req.body; // Get the signature from the request body
+
+    await injuryRef.update({
+      status: 'approved',
+      rescuer_signature: rescuer_signature, // Update with the signature
+    });
+
     res.status(200).json({ success: true, message: 'Injury approved successfully' });
   } catch (error) {
     console.error('Error approving injury:', error);
     res.status(500).json({ error: 'Unable to approve injury', details: error.message });
   }
 };
+
 
 // Reject an injury
 exports.rejectInjury = async (req, res) => {

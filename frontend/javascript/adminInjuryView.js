@@ -1,6 +1,18 @@
 let currentPage = 1;
 const limit = 5;
 
+// Initialize Firebase (Make sure to replace with your Firebase config)
+const firebaseConfig = {
+  apiKey: "AIzaSyCM__9j2n3QBf0Cb_NxDRncnx8u6i1QP_E",
+  authDomain: "mountain-rescue-863ea.firebaseapp.com",
+  projectId: "mountain-rescue-863ea",
+  storageBucket: "mountain-rescue-863ea.appspot.com",
+  messagingSenderId: "792489098952",
+  appId: "1:792489098952:web:cc5fd5ee1cf43ab18faffd"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 function fetchInjuries(page = 1) {
   fetch(`http://localhost:3000/api/injuries/admin?page=${page}&limit=${limit}`, {
     method: 'GET',
@@ -23,17 +35,18 @@ function fetchInjuries(page = 1) {
               year: 'numeric',
               month: '2-digit',
               day: '2-digit',
-              hour12: false // Set this to false for 24-hour format
+              hour12: false
             })
           : 'N/A';
 
         const row = document.createElement('tr');
         
         // Conditional rendering for action buttons
-        // Show buttons if status is 'pending' or doesn't exist
         const actionContent = !injury.status || injury.status === 'pending' ? `
-          <button class="btn btn-success btn-sm" onclick="approveInjury(event, '${injury.id}')">Approve</button>
-          <button class="btn btn-danger btn-sm" onclick="rejectInjury(event, '${injury.id}')">Reject</button>
+          <div class="button-container">
+            <button class="btn btn-success btn-sm" onclick="approveInjury(event, '${injury.id}')">Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectInjury(event, '${injury.id}')">Reject</button>
+          </div>
         ` : injury.status === 'approved' ? 'Injury Approved' : 'Injury Rejected';
 
         row.innerHTML = `
@@ -45,7 +58,6 @@ function fetchInjuries(page = 1) {
           </td>
         `;
 
-        // Handle row click to show modal with injury details
         row.addEventListener('click', () => {
           showInjuryDetailsModal(injury);
         });
@@ -63,26 +75,67 @@ function fetchInjuries(page = 1) {
 
 function approveInjury(event, injuryId) {
   event.stopPropagation(); // Prevent row click event from firing
-  fetch(`http://localhost:3000/api/injuries/${injuryId}/approve`, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Update the action column to show approved status
-      const actionCell = document.getElementById(`action-${injuryId}`);
-      actionCell.innerHTML = 'Injury Approved';
-    } else {
-      alert('Error approving injury');
-    }
-  })
-  .catch(error => console.error('Error:', error));
+
+  // Show signature modal
+  const signatureModal = new bootstrap.Modal(document.getElementById('signatureModal'));
+  const canvas = document.getElementById('signaturePad');
+  const signaturePad = new SignaturePad(canvas);
+
+  signatureModal.show();
+
+  // Ensure confirm-btn exists before assigning onclick
+  const confirmBtn = document.getElementById('confirm-btn');
+  if (confirmBtn) {
+    confirmBtn.onclick = function () {
+      if (!signaturePad.isEmpty()) {
+        const adminSignatureData = signaturePad.toDataURL(); // Get admin signature data as base64 image
+
+        // Send approval request to backend
+        fetch(`http://localhost:3000/api/injuries/${injuryId}/approve`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ admin_signature: adminSignatureData }), // Use admin_signature instead of rescuer_signature
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const actionCell = document.getElementById(`action-${injuryId}`);
+            actionCell.innerHTML = 'Injury Approved'; // Update UI
+            console.log('Injury approved successfully.');
+          } else {
+            alert('Error approving injury: ' + data.error);
+          }
+          signatureModal.hide(); // Hide modal after confirmation
+          signaturePad.clear(); // Clear signature pad
+        })
+        .catch(error => {
+          console.error('Error saving signature:', error);
+          alert('Error saving signature.');
+        });
+      } else {
+        alert("Please provide a signature before confirming.");
+      }
+    };
+  } else {
+    console.error("Confirm button not found in the DOM.");
+  }
+
+  // Clear the signature pad when the clear button is clicked
+  const clearBtn = document.getElementById('clear-btn');
+  if (clearBtn) {
+    clearBtn.onclick = function () {
+      signaturePad.clear();
+    };
+  } else {
+    console.error("Clear button not found in the DOM.");
+  }
 }
 
+
+// Reject injury function remains unchanged
 function rejectInjury(event, injuryId) {
   event.stopPropagation(); // Prevent row click event from firing
   fetch(`http://localhost:3000/api/injuries/${injuryId}/reject`, {
@@ -105,8 +158,7 @@ function rejectInjury(event, injuryId) {
   .catch(error => console.error('Error:', error));
 }
 
-
-// Show injury details in a modal
+// Show injury details in a modal function remains unchanged
 function showInjuryDetailsModal(injury) {
   const modalDetails = document.getElementById('modal-injury-details');
 
@@ -133,7 +185,7 @@ function showInjuryDetailsModal(injury) {
             hour12: false
         })}<br>
     
-    <hr> <!-- Separation line after basic information -->
+    <hr>
     
      <div style="text-align: center;">
       <strong>Medical Information</strong><br>
@@ -146,9 +198,15 @@ function showInjuryDetailsModal(injury) {
     <a href="${injury.ski_card_photo}" target="_blank">
       <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
     </a><br>
+    <br>
     <strong>Rescuer Signature:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
       <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+    </a><br>
+    <br>
+    <strong>Admin Signature:</strong>
+     <a href="${injury.admin_signature}" target="_blank">
+      <img src="${injury.admin_signature}" alt="Rescuer Signature" width="100">
     </a><br>
   `;
 
@@ -156,7 +214,7 @@ function showInjuryDetailsModal(injury) {
   injuryModal.show();
 }
 
-// Update the pagination buttons
+// Update the pagination buttons function remains unchanged
 function updatePagination(currentPage, totalPages) {
   const paginationElement = document.getElementById('pagination');
   paginationElement.innerHTML = '';
