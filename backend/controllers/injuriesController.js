@@ -6,7 +6,11 @@ exports.getAllInjuries = async (req, res) => {
   try {
     const { page = 1, limit = 5 } = req.query;
 
-    const injuriesSnapshot = await db.collection('injuries').get();
+    // Query the injuries collection, order by timestamp in descending order (latest first)
+    const injuriesSnapshot = await db.collection('injuries')
+      .orderBy('timestamp', 'desc')  // This ensures injuries are ordered by the timestamp
+      .get();
+
     let injuries = [];
 
     injuriesSnapshot.forEach((doc) => {
@@ -29,6 +33,8 @@ exports.getAllInjuries = async (req, res) => {
     res.status(500).json({ message: 'Error fetching injuries', error });
   }
 };
+
+
 
 // Insert a new injury
 exports.insertInjury = async (req, res) => {
@@ -64,13 +70,17 @@ exports.insertInjury = async (req, res) => {
   }
 };
 
-// Get specific injuries by rescuer
 exports.getInjuriesByRescuer = async (req, res) => {
   try {
     const uid = req.params.uid;
     const { page = 1, limit = 5 } = req.query;
 
-    const injuriesSnapshot = await db.collection('injuries').where('uid', '==', uid).get();
+    // Query injuries by rescuer and order by timestamp in descending order
+    const injuriesSnapshot = await db.collection('injuries')
+      .where('uid', '==', uid)
+      .orderBy('timestamp', 'desc')  // Order by timestamp (latest first)
+      .get();
+
     let injuries = [];
 
     injuriesSnapshot.forEach((doc) => {
@@ -79,6 +89,7 @@ exports.getInjuriesByRescuer = async (req, res) => {
 
     console.log('Total injuries:', injuries.length);
 
+    // Pagination logic
     const startIndex = (page - 1) * limit;
     const paginatedInjuries = injuries.slice(startIndex, startIndex + parseInt(limit));
 
@@ -93,6 +104,7 @@ exports.getInjuriesByRescuer = async (req, res) => {
   }
 };
 
+
 // Approve an injury
 exports.approveInjury = async (req, res) => {
   try {
@@ -105,11 +117,13 @@ exports.approveInjury = async (req, res) => {
       return res.status(404).json({ error: 'Injury not found' });
     }
 
-    const { rescuer_signature } = req.body; // Get the signature from the request body
+    const { admin_signature, admin_name } = req.body; // Capture admin signature and name from the request
 
+    // Update the injury document with the admin signature, admin name, and status 'approved'
     await injuryRef.update({
       status: 'approved',
-      rescuer_signature: rescuer_signature, // Update with the signature
+      admin_signature: admin_signature,  // Save the admin signature
+      admin_name: admin_name,  // Save the admin name
     });
 
     res.status(200).json({ success: true, message: 'Injury approved successfully' });
@@ -118,6 +132,8 @@ exports.approveInjury = async (req, res) => {
     res.status(500).json({ error: 'Unable to approve injury', details: error.message });
   }
 };
+
+
 
 
 // Reject an injury

@@ -40,7 +40,7 @@ function fetchRescuerInjuries(page = 1) {
 
         row.innerHTML = `
           <td>${injury.patient_name}</td>
-          <td>${injury.rescuer_name}</td>
+          <td>${injury.ski_run}</td>
           <td>${timestamp}</td>
           <td id="action-${injury.id}">
             ${actionContent}
@@ -73,7 +73,15 @@ function showInjuryDetailsModal(injury) {
     ? JSON.stringify(injury.injury_points)
     : injury.injury_points;
 
-  // Center the basic information
+  // Conditionally display admin signature and name only if the injury is approved
+  const adminSignatureDisplay = injury.status === 'approved' && injury.admin_signature 
+    ? `<strong>Admin Signature:</strong> 
+       <a href="${injury.admin_signature}" target="_blank">
+         <img src="${injury.admin_signature}" alt="Admin Signature" width="100">
+       </a><br>
+       <strong>Approved by:</strong> ${injury.admin_name}<br>` // Display admin name
+    : '';  // Do not display admin signature or name if not approved
+
   modalDetails.innerHTML = `
     <div style="text-align: center;">
       <strong>Basic Information</strong><br>
@@ -94,7 +102,7 @@ function showInjuryDetailsModal(injury) {
     
     <hr> <!-- Separation line after basic information -->
     
-     <div style="text-align: center;">
+    <div style="text-align: center;">
       <strong>Medical Information</strong><br>
     </div>
     <strong>Injured:</strong><br> ${injuryPoints} <br> <!-- Display formatted injuries -->
@@ -106,12 +114,13 @@ function showInjuryDetailsModal(injury) {
     <a href="${injury.ski_card_photo}" target="_blank">
       <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
     </a><br>
+
     <strong>Rescuer Signature:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
       <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
     </a><br>
-    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
     
+    ${adminSignatureDisplay} <!-- Only display admin info if approved -->
   `;
 
   // Show the modal
@@ -122,6 +131,7 @@ function showInjuryDetailsModal(injury) {
   const pdfButton = modalDetails.querySelector('.generate-pdf');
   pdfButton.addEventListener('click', () => generatePDF(injury));
 }
+
 
 // Generate PDF function with formal structure
 function generatePDF(injury) {

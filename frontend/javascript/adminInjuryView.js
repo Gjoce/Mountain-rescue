@@ -83,28 +83,37 @@ function approveInjury(event, injuryId) {
 
   signatureModal.show();
 
-  // Ensure confirm-btn exists before assigning onclick
   const confirmBtn = document.getElementById('confirm-btn');
   if (confirmBtn) {
     confirmBtn.onclick = function () {
       if (!signaturePad.isEmpty()) {
         const adminSignatureData = signaturePad.toDataURL(); // Get admin signature data as base64 image
+        const adminName = localStorage.getItem('userName');  // Retrieve admin name from localStorage
 
-        // Send approval request to backend
+        // Send approval request with signature and admin name
         fetch(`http://localhost:3000/api/injuries/${injuryId}/approve`, {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ admin_signature: adminSignatureData }), // Use admin_signature instead of rescuer_signature
+          body: JSON.stringify({ admin_signature: adminSignatureData, admin_name: adminName }),
         })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
+            // Update UI: show "Injury Approved"
             const actionCell = document.getElementById(`action-${injuryId}`);
-            actionCell.innerHTML = 'Injury Approved'; // Update UI
-            console.log('Injury approved successfully.');
+            actionCell.innerHTML = 'Injury Approved';
+
+            // Only attempt to show the admin signature if the element exists
+            const adminSignatureElement = document.getElementById('adminSignature');
+            const adminNameElement = document.getElementById('adminName');  // New element for admin name
+
+            if (adminSignatureElement && adminNameElement) {
+              adminSignatureElement.style.display = 'block'; // Show admin signature after approval
+              adminNameElement.innerHTML = `Approved by: ${adminName}`; // Display admin name
+            }
           } else {
             alert('Error approving injury: ' + data.error);
           }
@@ -119,20 +128,19 @@ function approveInjury(event, injuryId) {
         alert("Please provide a signature before confirming.");
       }
     };
-  } else {
-    console.error("Confirm button not found in the DOM.");
   }
 
-  // Clear the signature pad when the clear button is clicked
   const clearBtn = document.getElementById('clear-btn');
   if (clearBtn) {
     clearBtn.onclick = function () {
       signaturePad.clear();
     };
-  } else {
-    console.error("Clear button not found in the DOM.");
   }
 }
+
+
+
+
 
 
 // Reject injury function remains unchanged
@@ -158,61 +166,71 @@ function rejectInjury(event, injuryId) {
   .catch(error => console.error('Error:', error));
 }
 
-// Show injury details in a modal function remains unchanged
 function showInjuryDetailsModal(injury) {
   const modalDetails = document.getElementById('modal-injury-details');
 
+  // Check if injury_points is available and is an array
   const injuryPoints = Array.isArray(injury.injury_points)
     ? injury.injury_points.map((inj, index) => `${index + 1}. (side: ${inj.side}) (injury point: ${inj.point}) (type: ${inj.type})`).join('<br>')
-    : injury.injury_points;
+    : 'No injury points available';
+
+  const adminSignatureDisplay = injury.status === 'approved' && injury.admin_signature 
+    ? `<strong>Admin Signature:</strong> 
+       <a href="${injury.admin_signature}" target="_blank">
+         <img src="${injury.admin_signature}" alt="Admin Signature" width="100">
+       </a><br>
+       <strong id="adminName">Approved by: ${injury.admin_name}</strong><br>`  // Display admin name
+    : '';  // Only display admin signature and name if the injury is approved
 
   modalDetails.innerHTML = `
     <div style="text-align: center;">
       <strong>Basic Information</strong><br>
     </div>
-      <strong>Patient Name:</strong> ${injury.patient_name} <br>
-      <strong>Birth Date:</strong> ${injury.birth_date} <br>
-      <strong>Ski Run:</strong> ${injury.ski_run} <br>
-      <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
-      <strong>ID of Injury:</strong> ${injury.id}<br>
-      <strong>Timestamp:</strong> ${new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour12: false
-        })}<br>
-    
+    <strong>Patient Name:</strong> ${injury.patient_name} <br>
+    <strong>Birth Date:</strong> ${injury.birth_date} <br>
+    <strong>Ski Run:</strong> ${injury.ski_run} <br>
+    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
+    <strong>ID of Injury:</strong> ${injury.id}<br>
+    <strong>Timestamp:</strong> ${new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour12: false
+    })}<br>
+
     <hr>
-    
-     <div style="text-align: center;">
+
+    <div style="text-align: center;">
       <strong>Medical Information</strong><br>
     </div>
     <strong>Injured:</strong><br> ${injuryPoints} <br>
     <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
 
     <hr>
+
     <strong>Ski Card Photo:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
       <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
     </a><br>
-    <br>
+
     <strong>Rescuer Signature:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
       <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
     </a><br>
     <br>
-    <strong>Admin Signature:</strong>
-     <a href="${injury.admin_signature}" target="_blank">
-      <img src="${injury.admin_signature}" alt="Rescuer Signature" width="100">
-    </a><br>
+    ${adminSignatureDisplay}
   `;
 
   const injuryModal = new bootstrap.Modal(document.getElementById('injuryDetailsModal'));
   injuryModal.show();
 }
+
+
+
+
 
 // Update the pagination buttons function remains unchanged
 function updatePagination(currentPage, totalPages) {

@@ -53,16 +53,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="signatureModalLabel">Confirm Signature</h5>
+        <h5 class="modal-title text-dark" id="signatureModalLabel">Confirm Signature</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <canvas id="signaturePad" width="400" height="200"></canvas>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="clear-btn" class="btn btn-secondary">Clear</button>
-        <button type="button" id="confirm-btn" class="btn btn-primary">Confirm</button>
-      </div>
+        <canvas id="signaturePad" class="signature-pad"></canvas>
+        <button type="button" id="clear-btn" class="btn btn-warning mt-3 btns">Clear Signature</button>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="confirm-btn" class="btn btn-primary btns" data-bs-dismiss="modal">Confirm</button>
+    </div>
     </div>
   </div>
 </div>
