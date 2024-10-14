@@ -6,7 +6,7 @@ const router = express.Router();
 const verifyFirebaseToken = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1]; // Extract token from "Bearer <token>"
 
-    console.log('Received Token:', token); // Log the received token
+   
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
@@ -15,7 +15,7 @@ const verifyFirebaseToken = async (req, res, next) => {
     try {
         // Verify Firebase ID token
         const decodedToken = await admin.auth().verifyIdToken(token);
-        console.log('Decoded Token:', decodedToken); // Log decoded token
+       
 
         // Set user details in request object
         req.user = decodedToken;

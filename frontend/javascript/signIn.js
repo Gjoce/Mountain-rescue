@@ -66,9 +66,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             }
         } else {
             const errorData = await response.json();
-            document.getElementById('login-error').textContent = 'Login failed. ' + (errorData.message || 'Please check your credentials.');
+            document.getElementById('login-error').textContent = 'Login failed. Invalid credentials or user not found.';
         }
     } catch (error) {
-        document.getElementById('login-error').textContent = 'An error occurred: ' + error.message;
+        document.getElementById('login-error').textContent = 'Login failed. Please try again.';
     }
 });

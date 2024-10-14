@@ -1,10 +1,41 @@
-// Check if the user is logged in
+// Check if the user is logged in as an admin
 const authToken = localStorage.getItem('authToken');
 if (!authToken) {
-    alert('You must be logged in as an admin to access this page.');
+    
     window.location.href = 'index.html'; // Redirect to login page
+} else {
+    // Validate the authToken with the backend to confirm admin status
+    const checkAdminStatus = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + authToken,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                
+                window.location.href = 'index.html'; // Redirect if invalid
+            } else {
+                const data = await response.json();
+                if (!data.isAdmin) {
+                    
+                    window.location.href = 'index.html'; // Redirect if not admin
+                }
+            }
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+            alert('An error occurred while checking your status. Please try again.');
+            window.location.href = 'index.html'; // Redirect on error
+        }
+    };
+
+    checkAdminStatus(); // Call the function to check admin status
 }
 
+// Registration form submission
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -35,8 +66,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     }
 });
 
+// Logout function
 document.getElementById('logout').addEventListener('click', () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userUID');
+    localStorage.removeItem('userName');
     window.location.href = 'index.html'; // Redirect to login page
 });
