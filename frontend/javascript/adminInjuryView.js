@@ -1,92 +1,98 @@
 let currentPage = 1;
 const limit = 5;
 
-// Initialize Firebase (Make sure to replace with your Firebase config)
 const firebaseConfig = {
   apiKey: "AIzaSyCM__9j2n3QBf0Cb_NxDRncnx8u6i1QP_E",
   authDomain: "mountain-rescue-863ea.firebaseapp.com",
   projectId: "mountain-rescue-863ea",
   storageBucket: "mountain-rescue-863ea.appspot.com",
   messagingSenderId: "792489098952",
-  appId: "1:792489098952:web:cc5fd5ee1cf43ab18faffd"
+  appId: "1:792489098952:web:cc5fd5ee1cf43ab18faffd",
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 async function checkAdminAuth() {
-  const authToken = localStorage.getItem('authToken');
+  const authToken = localStorage.getItem("authToken");
 
   if (!authToken) {
-   
-    window.location.href = 'index.html'; // Redirect to login page
-    return false; // Not authenticated
+    window.location.href = "index.html";
+    return false;
   }
 
-  // Validate the authToken with the backend
   try {
     const response = await fetch(`http://localhost:3000/api/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': 'Bearer ' + authToken,
-        'Content-Type': 'application/json'
-      }
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
 
     if (!response.ok || !data.isAdmin) {
-    
-      window.location.href = 'index.html'; // Redirect if not an admin
-      return false; // Not authorized
+      window.location.href = "index.html";
+      return false;
     }
 
-    return true; // Authenticated and authorized as admin
+    return true;
   } catch (error) {
-    console.error('Error validating token:', error);
-    alert('An error occurred while checking access. Please try again.');
-    window.location.href = 'index.html'; // Redirect on error
-    return false; // Not authorized
+    console.error("Error validating token:", error);
+    alert("An error occurred while checking access. Please try again.");
+    window.location.href = "index.html";
+    return false;
   }
 }
 
 function fetchInjuries(page = 1) {
   checkAdminAuth();
-  fetch(`http://localhost:3000/api/injuries/admin?page=${page}&limit=${limit}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+  fetch(
+    `http://localhost:3000/api/injuries/admin?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("authToken"),
+      },
     }
-  })
-  .then(response => response.json())
-  .then(data => {
-    const injuriesList = document.getElementById('injuries-list');
-    injuriesList.innerHTML = ''; // Clear previous entries
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      const injuriesList = document.getElementById("injuries-list");
+      injuriesList.innerHTML = "";
 
-    if (data.data && data.data.length > 0) {
-      data.data.forEach(injury => {
-        const timestamp = injury.timestamp 
-          ? new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour12: false
-            })
-          : 'N/A';
+      if (data.data && data.data.length > 0) {
+        data.data.forEach((injury) => {
+          const timestamp = injury.timestamp
+            ? new Date(injury.timestamp._seconds * 1000).toLocaleString(
+                "en-GB",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour12: false,
+                }
+              )
+            : "N/A";
 
-        const row = document.createElement('tr');
-        
-        // Conditional rendering for action buttons
-        const actionContent = !injury.status || injury.status === 'pending' ? `  
+          const row = document.createElement("tr");
+
+          const actionContent =
+            !injury.status || injury.status === "pending"
+              ? `  
           <div class="button-container">
             <button class="btn btn-success btn-sm" onclick="approveInjury(event, '${injury.id}')">Approve</button>
             <button class="btn btn-danger btn-sm" onclick="rejectInjury(event, '${injury.id}')">Reject</button>
           </div>
-        ` : injury.status === 'approved' ? 'Injury Approved' : 'Injury Rejected';
+        `
+              : injury.status === "approved"
+              ? "Injury Approved"
+              : "Injury Rejected";
 
-        row.innerHTML = `
+          row.innerHTML = `
           <td>${injury.patient_name}</td>
           <td>${injury.rescuer_name}</td>
           <td>${timestamp}</td>
@@ -95,232 +101,232 @@ function fetchInjuries(page = 1) {
           </td>
         `;
 
-        row.addEventListener('click', () => {
-          showInjuryDetailsModal(injury);
+          row.addEventListener("click", () => {
+            showInjuryDetailsModal(injury);
+          });
+
+          injuriesList.appendChild(row);
         });
+      } else {
+        injuriesList.innerHTML = `<tr><td colspan="4">No injuries found.</td></tr>`;
+      }
 
-        injuriesList.appendChild(row);
-      });
-    } else {
-      injuriesList.innerHTML = `<tr><td colspan="4">No injuries found.</td></tr>`;
-    }
-
-    updatePagination(data.currentPage, data.totalPages);
-  })
-  .catch(error => console.error('Error fetching injuries:', error));
+      updatePagination(data.currentPage, data.totalPages);
+    })
+    .catch((error) => console.error("Error fetching injuries:", error));
 }
 
-// Ensure this function is defined in your adminInjuryView.js
 function generatePDF(injuryId) {
-  // Fetch the injury details
-  db.collection('injuries').doc(injuryId).get()
-    .then(doc => {
+  db.collection("injuries")
+    .doc(injuryId)
+    .get()
+    .then((doc) => {
       if (!doc.exists) {
-        alert('No injury found with the provided ID');
+        alert("No injury found with the provided ID");
         return;
       }
 
       const injury = doc.data();
-      const { 
-        patient_name, 
-        birth_date, 
-        ski_run, 
-        rescuer_name, 
-        timestamp, 
-        ski_card_photo, 
-        rescuer_signature, 
-        injury_points, 
-        medical_comment, 
-        admin_signature, 
-        admin_name 
+      const {
+        patient_name,
+        birth_date,
+        ski_run,
+        rescuer_name,
+        timestamp,
+        ski_card_photo,
+        rescuer_signature,
+        injury_points,
+        medical_comment,
+        admin_signature,
+        admin_name,
       } = injury;
 
-      // Initialize jsPDF
       const { jsPDF } = window.jspdf;
       const pdfDoc = new jsPDF();
 
-      // Set up PDF title
       pdfDoc.setFontSize(18);
-      pdfDoc.text('Injury Report', 10, 10);
+      pdfDoc.text("Injury Report", 10, 10);
       pdfDoc.setFontSize(12);
-      
-      // Add patient and rescuer information
+
       pdfDoc.text(`Patient Name: ${patient_name}`, 10, 20);
-      pdfDoc.text(`Birth Date: ${birth_date}`, 10, 30); // Added birth date
+      pdfDoc.text(`Birth Date: ${birth_date}`, 10, 30);
       pdfDoc.text(`Ski Run: ${ski_run}`, 10, 40);
       pdfDoc.text(`Rescuer: ${rescuer_name}`, 10, 50);
-      pdfDoc.text(`ID of Injury: ${injuryId}`, 10, 60); // Use injuryId directly
+      pdfDoc.text(`ID of Injury: ${injuryId}`, 10, 60);
 
-      // Format the timestamp for the PDF using your specified format
-      const formattedTimestamp = timestamp 
-        ? new Date(timestamp.seconds * 1000).toLocaleString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour12: false
+      const formattedTimestamp = timestamp
+        ? new Date(timestamp.seconds * 1000).toLocaleString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour12: false,
           })
-        : 'N/A';
+        : "N/A";
 
       pdfDoc.text(`Timestamp: ${formattedTimestamp}`, 10, 70);
 
-      // Add Medical Information section
-      pdfDoc.text('Medical Information', 10, 80);
-      // Format injury points
-      const injuryPointsText = Array.isArray(injury_points) && injury_points.length > 0
-        ? injury_points.map((pt, i) => `${i + 1}. (side: ${pt.side}) (injury point: ${pt.point}) (type: ${pt.type})`).join('\n')
-        : 'No injury points available';
+      pdfDoc.text("Medical Information", 10, 80);
+
+      const injuryPointsText =
+        Array.isArray(injury_points) && injury_points.length > 0
+          ? injury_points
+              .map(
+                (pt, i) =>
+                  `${i + 1}. (side: ${pt.side}) (injury point: ${
+                    pt.point
+                  }) (type: ${pt.type})`
+              )
+              .join("\n")
+          : "No injury points available";
 
       pdfDoc.text(`Injured:\n${injuryPointsText}`, 10, 90);
       pdfDoc.text(`Medical Comment: ${medical_comment}`, 10, 100);
 
-      // Add images (ski card photo and rescuer signature)
       const addImageToPDF = (imageUrl, yPosition) => {
         return fetch(imageUrl)
-          .then(response => response.blob())
-          .then(blob => {
+          .then((response) => response.blob())
+          .then((blob) => {
             const reader = new FileReader();
             return new Promise((resolve, reject) => {
               reader.onloadend = () => {
-                pdfDoc.addImage(reader.result, 'JPEG', 10, yPosition, 50, 50); // Adjust position and size
+                pdfDoc.addImage(reader.result, "JPEG", 10, yPosition, 50, 50);
                 resolve();
               };
-              reader.onerror = () => reject('Error reading image');
-              reader.readAsDataURL(blob); // Convert blob to base64
+              reader.onerror = () => reject("Error reading image");
+              reader.readAsDataURL(blob);
             });
           });
       };
 
       const promises = [];
-      if (ski_card_photo) promises.push(addImageToPDF(ski_card_photo, 120)); // Position ski card photo
-      if (rescuer_signature) promises.push(addImageToPDF(rescuer_signature, 180)); // Position rescuer signature
+      if (ski_card_photo) promises.push(addImageToPDF(ski_card_photo, 120));
+      if (rescuer_signature)
+        promises.push(addImageToPDF(rescuer_signature, 180));
 
-      // Wait for all images to be added, then save the PDF
       Promise.all(promises)
         .then(() => {
-          // Add admin information if the injury is approved
-          if (injury.status === 'approved' && admin_signature && admin_name) {
-            pdfDoc.addPage(); // New page for admin information
-            pdfDoc.text('Admin Information', 10, 10);
+          if (injury.status === "approved" && admin_signature && admin_name) {
+            pdfDoc.addPage();
+            pdfDoc.text("Admin Information", 10, 10);
             pdfDoc.text(`Admin Name: ${admin_name}`, 10, 20);
-            
-            // Add admin signature
+
             return fetch(admin_signature)
-              .then(response => response.blob())
-              .then(blob => {
+              .then((response) => response.blob())
+              .then((blob) => {
                 const reader = new FileReader();
                 return new Promise((resolve, reject) => {
                   reader.onloadend = () => {
-                    pdfDoc.addImage(reader.result, 'PNG', 10, 30, 50, 50); // Adjust size as needed
+                    pdfDoc.addImage(reader.result, "PNG", 10, 30, 50, 50);
                     resolve();
                   };
-                  reader.onerror = () => reject('Error reading admin signature');
+                  reader.onerror = () =>
+                    reject("Error reading admin signature");
                   reader.readAsDataURL(blob);
                 });
               });
           }
         })
         .then(() => {
-          // Add generation date at the bottom
-          const dateGenerated = new Date().toLocaleString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour12: false
+          const dateGenerated = new Date().toLocaleString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour12: false,
           });
-          pdfDoc.text(`Generated on: ${dateGenerated}`, 10, pdfDoc.internal.pageSize.height - 10);
+          pdfDoc.text(
+            `Generated on: ${dateGenerated}`,
+            10,
+            pdfDoc.internal.pageSize.height - 10
+          );
           pdfDoc.save(`${patient_name}_Injury_Report.pdf`);
         })
-        .catch(error => {
-          console.error('Error adding images to PDF:', error);
-          alert('Could not generate PDF with images.');
+        .catch((error) => {
+          console.error("Error adding images to PDF:", error);
+          alert("Could not generate PDF with images.");
         });
     })
-    .catch(error => {
-      console.error('Error fetching injury details:', error);
-      alert('Could not fetch injury details for PDF generation.');
+    .catch((error) => {
+      console.error("Error fetching injury details:", error);
+      alert("Could not fetch injury details for PDF generation.");
     });
 }
 
-
-
-// Ensure you have an event listener for the button click
-// PDF Generation with injury ID retrieval
-document.querySelector('.generate-pdf').addEventListener('click', function () {
-  const modalDetails = document.getElementById('modal-injury-details');
-  const injuryId = modalDetails.getAttribute('data-injury-id'); // Retrieve injury ID from modal
+document.querySelector(".generate-pdf").addEventListener("click", function () {
+  const modalDetails = document.getElementById("modal-injury-details");
+  const injuryId = modalDetails.getAttribute("data-injury-id");
   if (!injuryId) {
-    alert('No injury ID found. Please select an injury.');
+    alert("No injury ID found. Please select an injury.");
     return;
   }
   generatePDF(injuryId);
 });
 
-
-
 function approveInjury(event, injuryId) {
-  event.stopPropagation(); // Prevent row click event from firing
+  event.stopPropagation();
 
-  // Show signature modal
-  const signatureModal = new bootstrap.Modal(document.getElementById('signatureModal'));
-  const canvas = document.getElementById('signaturePad');
+  const signatureModal = new bootstrap.Modal(
+    document.getElementById("signatureModal")
+  );
+  const canvas = document.getElementById("signaturePad");
   const signaturePad = new SignaturePad(canvas);
 
   signatureModal.show();
 
-  const confirmBtn = document.getElementById('confirm-btn');
+  const confirmBtn = document.getElementById("confirm-btn");
   if (confirmBtn) {
     confirmBtn.onclick = function () {
       if (!signaturePad.isEmpty()) {
-        const adminSignatureData = signaturePad.toDataURL(); // Get admin signature data as base64 image
-        const adminName = localStorage.getItem('userName');  // Retrieve admin name from localStorage
+        const adminSignatureData = signaturePad.toDataURL();
+        const adminName = localStorage.getItem("userName");
 
-        // Send approval request with signature and admin name
         fetch(`http://localhost:3000/api/injuries/${injuryId}/approve`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
-            'Content-Type': 'application/json',
+            Authorization: "Bearer " + localStorage.getItem("authToken"),
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ admin_signature: adminSignatureData, admin_name: adminName }),
+          body: JSON.stringify({
+            admin_signature: adminSignatureData,
+            admin_name: adminName,
+          }),
         })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Update UI: show "Injury Approved"
-            const actionCell = document.getElementById(`action-${injuryId}`);
-            actionCell.innerHTML = 'Injury Approved';
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              const actionCell = document.getElementById(`action-${injuryId}`);
+              actionCell.innerHTML = "Injury Approved";
 
-            // Only attempt to show the admin signature if the element exists
-            const adminSignatureElement = document.getElementById('adminSignature');
-            const adminNameElement = document.getElementById('adminName');  // New element for admin name
+              const adminSignatureElement =
+                document.getElementById("adminSignature");
+              const adminNameElement = document.getElementById("adminName");
 
-            if (adminSignatureElement && adminNameElement) {
-              adminSignatureElement.style.display = 'block'; // Show admin signature after approval
-              adminNameElement.innerHTML = `Approved by: ${adminName}`; // Display admin name
+              if (adminSignatureElement && adminNameElement) {
+                adminSignatureElement.style.display = "block";
+                adminNameElement.innerHTML = `Approved by: ${adminName}`;
+              }
+            } else {
+              alert("Error approving injury: " + data.error);
             }
-          } else {
-            alert('Error approving injury: ' + data.error);
-          }
-          signatureModal.hide(); // Hide modal after confirmation
-          signaturePad.clear(); // Clear signature pad
-        })
-        .catch(error => {
-          console.error('Error saving signature:', error);
-          alert('Error saving signature.');
-        });
+            signatureModal.hide();
+            signaturePad.clear();
+          })
+          .catch((error) => {
+            console.error("Error saving signature:", error);
+            alert("Error saving signature.");
+          });
       } else {
         alert("Please provide a signature before confirming.");
       }
     };
   }
 
-  const clearBtn = document.getElementById('clear-btn');
+  const clearBtn = document.getElementById("clear-btn");
   if (clearBtn) {
     clearBtn.onclick = function () {
       signaturePad.clear();
@@ -328,51 +334,51 @@ function approveInjury(event, injuryId) {
   }
 }
 
-
-
-
-
-
-// Reject injury function remains unchanged
 function rejectInjury(event, injuryId) {
-  event.stopPropagation(); // Prevent row click event from firing
+  event.stopPropagation();
   fetch(`http://localhost:3000/api/injuries/${injuryId}/reject`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
-      'Content-Type': 'application/json'
-    }
+      Authorization: "Bearer " + localStorage.getItem("authToken"),
+      "Content-Type": "application/json",
+    },
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Update the action column to show rejected status
-      const actionCell = document.getElementById(`action-${injuryId}`);
-      actionCell.innerHTML = 'Injury Rejected';
-    } else {
-      alert('Error rejecting injury');
-    }
-  })
-  .catch(error => console.error('Error:', error));
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        const actionCell = document.getElementById(`action-${injuryId}`);
+        actionCell.innerHTML = "Injury Rejected";
+      } else {
+        alert("Error rejecting injury");
+      }
+    })
+    .catch((error) => console.error("Error:", error));
 }
 
 function showInjuryDetailsModal(injury) {
-  const modalDetails = document.getElementById('modal-injury-details');
+  const modalDetails = document.getElementById("modal-injury-details");
 
-  // Set the injury ID as a data attribute on the modal
-  modalDetails.setAttribute('data-injury-id', injury.id); // Set the ID
+  modalDetails.setAttribute("data-injury-id", injury.id);
 
   const injuryPoints = Array.isArray(injury.injury_points)
-    ? injury.injury_points.map((inj, index) => `${index + 1}. (side: ${inj.side}) (injury point: ${inj.point}) (type: ${inj.type})`).join('<br>')
-    : 'No injury points available';
+    ? injury.injury_points
+        .map(
+          (inj, index) =>
+            `${index + 1}. (side: ${inj.side}) (injury point: ${
+              inj.point
+            }) (type: ${inj.type})`
+        )
+        .join("<br>")
+    : "No injury points available";
 
-  const adminSignatureDisplay = injury.status === 'approved' && injury.admin_signature 
-    ? `<strong>Admin Signature:</strong> 
+  const adminSignatureDisplay =
+    injury.status === "approved" && injury.admin_signature
+      ? `<strong>Admin Signature:</strong> 
        <a href="${injury.admin_signature}" target="_blank">
          <img src="${injury.admin_signature}" alt="Admin Signature" width="100">
        </a><br>
-       <strong id="adminName">Approved by: ${injury.admin_name}</strong><br>` 
-    : '';
+       <strong id="adminName">Approved by: ${injury.admin_name}</strong><br>`
+      : "";
 
   modalDetails.innerHTML = `
     <div style="text-align: center;">
@@ -383,14 +389,16 @@ function showInjuryDetailsModal(injury) {
     <strong>Ski Run:</strong> ${injury.ski_run} <br>
     <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
     <strong>ID of Injury:</strong> ${injury.id}<br>
-    <strong>Timestamp:</strong> ${new Date(injury.timestamp._seconds * 1000).toLocaleString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour12: false
+    <strong>Timestamp:</strong> ${new Date(
+      injury.timestamp._seconds * 1000
+    ).toLocaleString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour12: false,
     })}<br>
 
     <hr>
@@ -410,48 +418,45 @@ function showInjuryDetailsModal(injury) {
 
     <strong>Rescuer Signature:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
-      <img src="${injury.rescuer_signature}" alt="Rescuer Signature" width="100">
+      <img src="${
+        injury.rescuer_signature
+      }" alt="Rescuer Signature" width="100">
     </a><br>
     <br>
     ${adminSignatureDisplay}
   `;
 
-  const injuryModal = new bootstrap.Modal(document.getElementById('injuryDetailsModal'));
+  const injuryModal = new bootstrap.Modal(
+    document.getElementById("injuryDetailsModal")
+  );
   injuryModal.show();
 }
 
-
-
-
-
-
-// Update the pagination buttons function remains unchanged
 function updatePagination(currentPage, totalPages) {
-  const paginationElement = document.getElementById('pagination');
-  paginationElement.innerHTML = '';
+  const paginationElement = document.getElementById("pagination");
+  paginationElement.innerHTML = "";
 
   if (currentPage > 1) {
-    const prevButton = document.createElement('button');
-    prevButton.innerHTML = 'Previous';
+    const prevButton = document.createElement("button");
+    prevButton.innerHTML = "Previous";
     prevButton.onclick = () => fetchInjuries(currentPage - 1);
     paginationElement.appendChild(prevButton);
   }
 
   for (let i = 1; i <= totalPages; i++) {
-    const pageButton = document.createElement('button');
+    const pageButton = document.createElement("button");
     pageButton.innerHTML = i;
-    pageButton.className = (i === currentPage) ? 'active-page' : '';
+    pageButton.className = i === currentPage ? "active-page" : "";
     pageButton.onclick = () => fetchInjuries(i);
     paginationElement.appendChild(pageButton);
   }
 
   if (currentPage < totalPages) {
-    const nextButton = document.createElement('button');
-    nextButton.innerHTML = 'Next';
+    const nextButton = document.createElement("button");
+    nextButton.innerHTML = "Next";
     nextButton.onclick = () => fetchInjuries(currentPage + 1);
     paginationElement.appendChild(nextButton);
   }
 }
 
-// Initialize
 fetchInjuries(currentPage);
