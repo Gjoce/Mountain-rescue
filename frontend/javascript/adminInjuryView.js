@@ -84,13 +84,13 @@ function fetchInjuries(page = 1) {
             !injury.status || injury.status === "pending"
               ? `  
           <div class="button-container">
-            <button class="btn btn-success btn-sm" onclick="approveInjury(event, '${injury.id}')">Approve</button>
-            <button class="btn btn-danger btn-sm" onclick="rejectInjury(event, '${injury.id}')">Reject</button>
+            <button class="btn btn-success btn-sm" onclick="approveInjury(event, '${injury.id}')">Odobri</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectInjury(event, '${injury.id}')">Odbaci</button>
           </div>
         `
               : injury.status === "approved"
-              ? "Injury Approved"
-              : "Injury Rejected";
+              ? "Povreda Prihvaćena"
+              : "Povreda Odbijena";
 
           row.innerHTML = `
           <td>${injury.patient_name}</td>
@@ -108,7 +108,7 @@ function fetchInjuries(page = 1) {
           injuriesList.appendChild(row);
         });
       } else {
-        injuriesList.innerHTML = `<tr><td colspan="4">No injuries found.</td></tr>`;
+        injuriesList.innerHTML = `<tr><td colspan="4">Nisu pronađene povrede</td></tr>`;
       }
 
       updatePagination(data.currentPage, data.totalPages);
@@ -300,7 +300,7 @@ function approveInjury(event, injuryId) {
           .then((data) => {
             if (data.success) {
               const actionCell = document.getElementById(`action-${injuryId}`);
-              actionCell.innerHTML = "Injury Approved";
+              actionCell.innerHTML = "Povreda Prihvaćena";
 
               const adminSignatureElement =
                 document.getElementById("adminSignature");
@@ -308,7 +308,7 @@ function approveInjury(event, injuryId) {
 
               if (adminSignatureElement && adminNameElement) {
                 adminSignatureElement.style.display = "block";
-                adminNameElement.innerHTML = `Approved by: ${adminName}`;
+                adminNameElement.innerHTML = `Prihvaćena od: ${adminName}`;
               }
             } else {
               alert("Error approving injury: " + data.error);
@@ -347,7 +347,7 @@ function rejectInjury(event, injuryId) {
     .then((data) => {
       if (data.success) {
         const actionCell = document.getElementById(`action-${injuryId}`);
-        actionCell.innerHTML = "Injury Rejected";
+        actionCell.innerHTML = "Povreda Odbijena";
       } else {
         alert("Error rejecting injury");
       }
@@ -364,63 +364,63 @@ function showInjuryDetailsModal(injury) {
     ? injury.injury_points
         .map(
           (inj, index) =>
-            `${index + 1}. (side: ${inj.side}) (injury point: ${
+            `${index + 1}. (strana: ${inj.side}) (povredene tačke: ${
               inj.point
-            }) (type: ${inj.type})`
+            }) (tip: ${inj.type})`
         )
         .join("<br>")
     : "No injury points available";
 
   const adminSignatureDisplay =
     injury.status === "approved" && injury.admin_signature
-      ? `<strong>Admin Signature:</strong> 
+      ? `<strong>Podpis Nadrednog:</strong> 
        <a href="${injury.admin_signature}" target="_blank">
-         <img src="${injury.admin_signature}" alt="Admin Signature" width="100">
+         <img src="${injury.admin_signature}" alt="Podpis Nadrednog" width="100">
        </a><br>
-       <strong id="adminName">Approved by: ${injury.admin_name}</strong><br>`
+       <strong id="adminName">Prihvaćeno od:</strong> ${injury.admin_name}<br>`
       : "";
 
   modalDetails.innerHTML = `
     <div style="text-align: center;">
-      <strong>Basic Information</strong><br>
-    </div>
-    <strong>Patient Name:</strong> ${injury.patient_name} <br>
-    <strong>Birth Date:</strong> ${injury.birth_date} <br>
-    <strong>Ski Run:</strong> ${injury.ski_run} <br>
-    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
-    <strong>ID of Injury:</strong> ${injury.id}<br>
-    <strong>Timestamp:</strong> ${new Date(
-      injury.timestamp._seconds * 1000
-    ).toLocaleString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour12: false,
-    })}<br>
+     <strong>Osnovne informacije</strong><br>
+</div>
+<strong>Ime pacijenta:</strong> ${injury.patient_name} <br>
+<strong>Datum rođenja:</strong> ${injury.birth_date} <br>
+<strong>Staza:</strong> ${injury.ski_run} <br>
+<strong>Spasilac:</strong> ${injury.rescuer_name}<br>
+<strong>ID povrede:</strong> ${injury.id}<br>
+<strong>Vreme unosa:</strong> ${new Date(
+    injury.timestamp._seconds * 1000
+  ).toLocaleString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour12: false,
+  })}<br>
 
     <hr>
 
     <div style="text-align: center;">
-      <strong>Medical Information</strong><br>
+      <strong>Medicinske Informacije</strong><br>
     </div>
-    <strong>Injured:</strong><br> ${injuryPoints} <br>
-    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+    <strong>Povredeni:</strong><br> ${injuryPoints} <br>
+    <strong>Medicinski komentar:</strong> ${injury.medical_comment} <br>
 
     <hr>
 
-    <strong>Ski Card Photo:</strong>
+    <strong>Fotografija Skijaške Karte:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
-      <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
+      <img src="${
+        injury.ski_card_photo
+      }" alt="Fotografija Skijaške Karte" width="100">
     </a><br>
 
-    <strong>Rescuer Signature:</strong>
+    <strong>Podpis Spasioca:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
-      <img src="${
-        injury.rescuer_signature
-      }" alt="Rescuer Signature" width="100">
+      <img src="${injury.rescuer_signature}" alt="Podpis Spasioca" width="100">
     </a><br>
     <br>
     ${adminSignatureDisplay}
@@ -438,7 +438,7 @@ function updatePagination(currentPage, totalPages) {
 
   if (currentPage > 1) {
     const prevButton = document.createElement("button");
-    prevButton.innerHTML = "Previous";
+    prevButton.innerHTML = "Prethodni";
     prevButton.onclick = () => fetchInjuries(currentPage - 1);
     paginationElement.appendChild(prevButton);
   }
@@ -453,7 +453,7 @@ function updatePagination(currentPage, totalPages) {
 
   if (currentPage < totalPages) {
     const nextButton = document.createElement("button");
-    nextButton.innerHTML = "Next";
+    nextButton.innerHTML = "Sledeći";
     nextButton.onclick = () => fetchInjuries(currentPage + 1);
     paginationElement.appendChild(nextButton);
   }

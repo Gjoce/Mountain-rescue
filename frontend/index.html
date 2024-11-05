@@ -1,49 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <title>Mountain Rescue Login</title>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>Prijava za Planinsko Spasavanje</title>
 
-    <!-- Firebase Scripts -->
+    <!-- Firebase Skripte -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <!-- SVG Logo centered at the top -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- SVG Logo centriran na vrhu -->
     <div class="logo-container text-center">
-        <img src="./images/logo.png" alt="Logo" width="200" height="200">
+      <img src="./images/logo.png" alt="Logo" width="200" height="200" />
     </div>
-    <h1 style="text-align: center;"><strong>Rescue Service Jahorina</strong></h1>
-    
+    <h1 style="text-align: center">
+      <strong>Spasilačka Služba Jahorina</strong>
+    </h1>
+
     <div class="login-container">
-        <h3>Login</h3>
-        <form id="loginForm">
-            <input type="email" id="email" class="form-control" placeholder="Email" required>
-            <input type="password" id="password" class="form-control" placeholder="Password" required>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <div id="login-error"></div>
-        <div id="result"></div>
+      <h3>Prijava</h3>
+      <form id="loginForm">
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Lozinka"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Prijavi se</button>
+      </form>
+      <div id="login-error"></div>
+      <div id="result"></div>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <span >Developed by: Georgi Dimov | Donated by: Jandreski</span>
+      <span>Razvio: Georgi Dimov | Donacija: Jandreski</span>
     </footer>
 
-    <!-- Firebase and JavaScript File -->
+    <!-- Firebase i JavaScript fajl -->
     <script src="javascript/signIn.js"></script>
 
-    <!-- Bootstrap JS and Dependencies -->
+    <!-- Bootstrap JS i zavisnosti -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>

@@ -83,10 +83,10 @@ function fetchRescuerInjuries(page = 1) {
 
           const actionContent =
             injury.status === "approved"
-              ? "Injury Approved"
+              ? "Povreda Prihvaćena"
               : injury.status === "rejected"
-              ? "Injury Rejected"
-              : "Pending";
+              ? "Povreda Odbijena"
+              : "Na Čekanju";
 
           row.innerHTML = `
           <td>${injury.patient_name}</td>
@@ -121,31 +121,31 @@ function showInjuryDetailsModal(injury) {
     ? injury.injury_points
         .map(
           (inj, index) =>
-            `${index + 1}. (side: ${inj.side}) (injury point: ${
+            `${index + 1}. (strana: ${inj.side}) (povredene tačke: ${
               inj.point
-            }) (type: ${inj.type})`
+            }) (tip: ${inj.type})`
         )
         .join("<br>")
     : "No injury points available";
 
   const adminSignatureDisplay =
     injury.status === "approved" && injury.admin_signature
-      ? `<strong>Admin Signature:</strong> 
+      ? `<strong>Podpis Nadrednog:</strong> 
        <a href="${injury.admin_signature}" target="_blank">
-         <img src="${injury.admin_signature}" alt="Admin Signature" width="100">
+         <img src="${injury.admin_signature}" alt="Podpis Nadrednog" width="100">
        </a><br>
-       <strong>Approved by:</strong> ${injury.admin_name}<br>`
+       <strong>Prihvaćeno od:</strong> ${injury.admin_name}<br>`
       : "";
 
   modalDetails.innerHTML = `
     <div style="text-align: center;">
-      <strong>Basic Information</strong><br>
+      <strong>Osnovne informacije</strong><br>
     </div>
-    <strong>Patient Name:</strong> ${injury.patient_name} <br>
-    <strong>Birth Date:</strong> ${injury.birth_date} <br>
-    <strong>Ski Run:</strong> ${injury.ski_run} <br>
-    <strong>Rescuer:</strong> ${injury.rescuer_name}<br>
-    <strong>Timestamp:</strong> ${new Date(
+    <strong>Ime pacijenta:</strong> ${injury.patient_name} <br>
+    <strong>Datum rođenja:</strong> ${injury.birth_date} <br>
+    <strong>Staza:</strong> ${injury.ski_run} <br>
+    <strong>Spasilac:</strong> ${injury.rescuer_name}<br>
+    <strong>Vreme unosa:</strong> ${new Date(
       injury.timestamp._seconds * 1000
     ).toLocaleString("en-GB", {
       hour: "2-digit",
@@ -160,23 +160,23 @@ function showInjuryDetailsModal(injury) {
     <hr>
 
     <div style="text-align: center;">
-      <strong>Medical Information</strong><br>
+      <strong>Medicinske Informacije</strong><br>
     </div>
-    <strong>Injured:</strong><br> ${injuryPoints} <br>
-    <strong>Medical Comment:</strong> ${injury.medical_comment} <br>
+    <strong>Povredeni:</strong><br> ${injuryPoints} <br>
+    <strong>Medicinski komentar:</strong> ${injury.medical_comment} <br>
 
     <hr>
 
-    <strong>Ski Card Photo:</strong>
+    <strong>Fotografija Skijaške Karte:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
-      <img src="${injury.ski_card_photo}" alt="Ski Card Photo" width="100">
+      <img src="${
+        injury.ski_card_photo
+      }" alt="Fotografija Skijaške Karte" width="100">
     </a><br>
 
-    <strong>Rescuer Signature:</strong>
+    <strong>Podpis Spasioca:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
-      <img src="${
-        injury.rescuer_signature
-      }" alt="Rescuer Signature" width="100">
+      <img src="${injury.rescuer_signature}" alt="Podpis Spasioca" width="100">
     </a><br>
     <br>
     ${adminSignatureDisplay}
@@ -341,28 +341,27 @@ function updatePagination(currentPage, totalPages) {
   const paginationElement = document.querySelector(".pagination");
   paginationElement.innerHTML = "";
 
-  if (totalPages <= 1) {
-    return;
+  if (currentPage > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.innerHTML = "Prethodni";
+    prevButton.onclick = () => fetchRescuerInjuries(currentPage - 1);
+    paginationElement.appendChild(prevButton);
   }
 
   for (let i = 1; i <= totalPages; i++) {
-    const pageItem = document.createElement("li");
-    pageItem.classList.add("page-item");
-    if (i === currentPage) {
-      pageItem.classList.add("active");
-    }
+    const pageButton = document.createElement("button");
+    pageButton.innerHTML = i;
+    pageButton.className = i === currentPage ? "active-page" : "";
+    pageButton.onclick = () => fetchRescuerInjuries(i);
+    paginationElement.appendChild(pageButton);
+  }
 
-    const pageLink = document.createElement("a");
-    pageLink.classList.add("page-link");
-    pageLink.textContent = i;
-    pageLink.href = "#";
-    pageLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      currentPage = i;
-      fetchRescuerInjuries(currentPage);
-    });
-
-    pageItem.appendChild(pageLink);
-    paginationElement.appendChild(pageItem);
+  if (currentPage < totalPages) {
+    const nextButton = document.createElement("button");
+    nextButton.innerHTML = "Sledeći";
+    nextButton.onclick = () => fetchRescuerInjuries(currentPage + 1);
+    paginationElement.appendChild(nextButton);
   }
 }
+
+fetchRescuerInjuries(currentPage);

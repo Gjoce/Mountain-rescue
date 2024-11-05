@@ -2,14 +2,15 @@ const injuryPoints = document.querySelectorAll(".injury-point");
 const injuryTypeContainer = document.getElementById("injury-type-dropdowns");
 
 const injuryTypes = `
-    <label class="form-label">Select Injury Type:</label>
+    <label class="form-label">Izberite tip povrede:</label>
     <select class="form-select" name="injury_type">
-        <option value="" disabled selected>Select Injury Type</option>
-        <option value="Sprain">Sprain</option>
-        <option value="Fracture">Fracture</option>
-        <option value="Dislocation">Dislocation</option>
-        <option value="Cut">Cut</option>
-        <option value="Bruise">Bruise</option>
+        <option value="" disabled selected>Tip povrede</option>
+        <option value="Uganuće">Uganuće</option>
+        <option value="Prelom">Prelom</option>
+        <option value="Iščašenje">Iščašenje</option>
+        <option value="Posekotina">Posekotina</option>
+        <option value="Modrica">Modrica</option>
+
     </select>
 `;
 
@@ -28,7 +29,7 @@ injuryPoints.forEach((point) => {
       div.className = "mb-3 injury-type";
       div.id = `dropdown-${injuryId}`;
       div.innerHTML =
-        `<label for="${injuryId}-injury">${point.value} Injury Type:</label>` +
+        `<label for="${injuryId}-injury">${point.value} :</label>` +
         injuryTypes;
       injuryTypeContainer.appendChild(div);
     } else {
@@ -112,7 +113,7 @@ document
           const side = injuryId.endsWith("L")
             ? "L"
             : injuryId.endsWith("R")
-            ? "R"
+            ? "D"
             : "Center";
           return {
             point: checkbox.value,

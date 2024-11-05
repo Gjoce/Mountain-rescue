@@ -1,47 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <title>User Panel</title>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>Korisnički Panel</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css">
-</head>
-<body>
-    <button id="logout" class="btn btn-danger logout-btn">Logout</button> <!-- Logout button at the top-right corner -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+  <body>
+    <button id="logout" class="btn btn-danger logout-btn">Odjava</button>
+    <!-- Dugme za odjavu u gornjem desnom uglu -->
 
-    <!-- SVG Logo centered at the top -->
+    <!-- SVG Logo centriran na vrhu -->
     <div class="logo-container">
-        <img src="./images/logo.png" alt="Logo" width="200" height="200">
-      
+      <img src="./images/logo.png" alt="Logo" width="200" height="200" />
     </div>
-    <h1 style="text-align: center;"><strong>Rescue Service Jahorina</strong></h1>
+    <h1 style="text-align: center">
+      <strong>Spasilačka Služba Jahorina</strong>
+    </h1>
 
-    <!-- Login Container -->
+    <!-- Kontejner za prijavu -->
     <div class="login-container text-center">
-        <h3>User Panel</h3>
-        <a href="registerInjury.html" class="btn btn-primary btn-register">Register New Injury</a> <!-- Largest button -->
-        <a href="rescuerViewInjury.html" class="btn btn-secondary btn-history">History of Injuries</a> <!-- Smaller button -->
+      <h3>Korisnički Panel</h3>
+      <a href="registerInjury.html" class="btn btn-primary btn-register"
+        >Prijavi Novu Povredu</a
+      >
+      <!-- Najveće dugme -->
+      <a href="rescuerViewInjury.html" class="btn btn-secondary btn-history"
+        >Istorija Povreda</a
+      >
+      <!-- Manje dugme -->
     </div>
 
-          <!-- Firebase App (Core SDK) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <!-- Firebase App (Core SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 
-<!-- Firebase Auth SDK (optional, if you're using Firebase Authentication) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Firebase Auth SDK (opcionalno, ako koristite Firebase Authentication) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-<!-- Firebase Firestore SDK (if you're using Firestore) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Firebase Firestore SDK (ako koristite Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-    <!-- JavaScript File -->
+    <!-- JavaScript fajl -->
     <script src="javascript/user_panel.js"></script>
 
-    <!-- Bootstrap JS and Dependencies -->
+    <!-- Bootstrap JS i zavisnosti -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>

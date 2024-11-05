@@ -1,207 +1,416 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <title>Report Injury</title>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>Prijava Povrede</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/injury.css">
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/injury.css" />
+  </head>
 
-<body>
-    <button onclick="history.back()" class="btn-secondary back-btn">Back</button>
+  <body>
+    <button onclick="history.back()" class="btn-secondary back-btn">
+      Nazad
+    </button>
 
     <div class="container">
-        <h1 class="mb-4 text-center">Report Injury</h1>
+      <h1 class="mb-4 text-center">Prijava Povrede</h1>
 
-        <form id="injuryForm" enctype="multipart/form-data">
-            <!-- Ski Run Dropdown -->
-            <div class="mb-3">
-                <label for="ski_run" class="form-label">Ski Run:</label>
-                <select class="form-select" id="ski_run" name="ski_run" required>
-                    <option value="" disabled selected>Select Ski Run</option>
-                    <option value="Run 1">Run 1</option>
-                    <option value="Run 2">Run 2</option>
-                    <option value="Run 3">Run 3</option>
-                </select>
+      <form id="injuryForm" enctype="multipart/form-data">
+        <!-- Izbor skijaške staze -->
+        <div class="mb-3">
+          <label for="ski_run" class="form-label">Skijaška Staza:</label>
+          <select class="form-select" id="ski_run" name="ski_run" required>
+            <option value="" disabled selected>Izaberite Skijašku Stazu</option>
+            <option value="Staza 1">Staza 1</option>
+            <option value="Staza 2">Staza 2</option>
+            <option value="Staza 3">Staza 3</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Ime Povređene Osobe:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="birth_date" class="form-label">Datum Rođenja:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="birth_date"
+            name="birth_date"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="ski_card_photo" class="form-label"
+            >Fotografija Skijaške Karte:</label
+          >
+          <input
+            type="file"
+            class="form-control"
+            id="ski_card_photo"
+            name="ski_card_photo"
+            accept="image/*"
+            capture="camera"
+            required
+          />
+        </div>
+
+        <h3 class="text-center">Mesta Povrede:</h3>
+
+        <div class="injury-points-container">
+          <!-- Desna Strana: Slovo R i izbor mesta povrede -->
+          <div class="left-column">
+            <div class="text-center letter">D</div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Kost Klavikule"
+                id="claviculeR"
+              />
+              <label class="form-check-label" for="claviculeR"
+                >Kost Klavikule</label
+              >
             </div>
-
-            <div class="mb-3">
-                <label for="name" class="form-label">Injured Person's Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Rame"
+                id="shoulderR"
+              />
+              <label class="form-check-label" for="shoulderR">Rame</label>
             </div>
+            <!-- Dodajte još checkbox opcija ovde -->
 
-            <div class="mb-3">
-                <label for="birth_date" class="form-label">Birth Date:</label>
-                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Gornja Ruka"
+                id="upperarmR"
+              />
+              <label class="form-check-label" for="upperarmR"
+                >Gornja Ruka</label
+              >
             </div>
-
-            <div class="mb-3">
-                <label for="ski_card_photo" class="form-label">Ski Card Photo:</label>
-                <input type="file" class="form-control" id="ski_card_photo" name="ski_card_photo" accept="image/*" capture="camera" required>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Lakat"
+                id="elbowR"
+              />
+              <label class="form-check-label" for="elbowR">Lakat</label>
             </div>
-
-            <h3 class="text-center">Injury Points:</h3>
-
-            <div class="injury-points-container">
-                <!-- Right Side: Big Letter R and Body Part Checkboxes -->
-                <div class="left-column">
-                    <div class="text-center letter">R</div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Clavicule" id="claviculeR">
-                        <label class="form-check-label" for="claviculeR">Clavicule</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Shoulder" id="shoulderR">
-                        <label class="form-check-label" for="shoulderR">Shoulder</label>
-                    </div>
-                    <!-- Add more checkboxes here -->
-            
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Upper_arm" id="upperarmR">
-                        <label class="form-check-label" for="upperarmR">Upper Arm</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Elbow" id="elbowR">
-                        <label class="form-check-label" for="elbowR">Elbow</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Forearm" id="forearmR">
-                        <label class="form-check-label" for="forearmR">Forearm</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Hand" id="handR">
-                        <label class="form-check-label" for="handR">Hand</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Hip" id="hipR">
-                        <label class="form-check-label" for="hipR">Hip</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Upper_leg" id="upperlegR">
-                        <label class="form-check-label" for="upperlegR">Upper Leg</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Knee" id="kneeR">
-                        <label class="form-check-label" for="kneeR">Knee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Lower_leg" id="lowerlegR">
-                        <label class="form-check-label" for="lowerlegR">Lower Leg</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Feet" id="feetR">
-                        <label class="form-check-label" for="feetR">Feet</label>
-                    </div>
-                </div>
-
-                <!-- Center: PNG Image and Central Checkboxes -->
-                <div class="center-column text-center">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Head" id="head">
-                        <label class="form-check-label" for="head">Head</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Neck" id="neck">
-                        <label class="form-check-label" for="neck">Neck</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Thorax" id="thorax">
-                        <label class="form-check-label" for="thorax">Thorax</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Abdomen" id="abdomen">
-                        <label class="form-check-label" for="abdomen">Abdomen</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Spine" id="spine">
-                        <label class="form-check-label" for="spine">Spine</label>
-                    </div>
-                    <img src="./images/human-body-frontal.png" alt="Body Diagram" class="body-diagram">
-                </div>
-
-                <!-- Left Side: Big Letter L and Body Part Checkboxes -->
-                <div class="right-column">
-                    <div class="text-center letter">L</div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Clavicule" id="claviculeL">
-                        <label class="form-check-label" for="claviculeL">Clavicule</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Shoulder" id="shoulderL">
-                        <label class="form-check-label" for="shoulderL">Shoulder</label>
-                    </div>
-                    <!-- Add more checkboxes here -->
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Upper_arm" id="upperarmL">
-                        <label class="form-check-label" for="upperarmL">Upper Arm</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Elbow" id="elbowL">
-                        <label class="form-check-label" for="elbowL">Elbow</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Forearm" id="forearmL">
-                        <label class="form-check-label" for="forearmL">Forearm</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Hand" id="handL">
-                        <label class="form-check-label" for="handL">Hand</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Hip" id="hipL">
-                        <label class="form-check-label" for="hipL">Hip</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Upper_leg" id="upperlegL">
-                        <label class="form-check-label" for="upperlegL">Upper Leg</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Knee" id="kneeL">
-                        <label class="form-check-label" for="kneeL">Knee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Lower_leg" id="lowerlegL">
-                        <label class="form-check-label" for="lowerlegL">Lower Leg</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input injury-point" name="injury_points" value="Feet" id="feetL">
-                        <label class="form-check-label" for="feetL">Feet</label>
-                    </div>
-                </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Podlaktica"
+                id="forearmR"
+              />
+              <label class="form-check-label" for="forearmR">Podlaktica</label>
             </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Šaka"
+                id="handR"
+              />
+              <label class="form-check-label" for="handR">Šaka</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Kuk"
+                id="hipR"
+              />
+              <label class="form-check-label" for="hipR">Kuk</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Gornji Deo Noge"
+                id="upperlegR"
+              />
+              <label class="form-check-label" for="upperlegR"
+                >Gornji Deo Noge</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Koleno"
+                id="kneeR"
+              />
+              <label class="form-check-label" for="kneeR">Koleno</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Donji Deo Noge"
+                id="lowerlegR"
+              />
+              <label class="form-check-label" for="lowerlegR"
+                >Donji Deo Noge</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Stopala"
+                id="feetR"
+              />
+              <label class="form-check-label" for="feetR">Stopala</label>
+            </div>
+          </div>
 
-            <h3>Type of Injury:</h3>
+          <!-- Sredina: PNG slika i centrirani izbori -->
+          <div class="center-column text-center">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Glava"
+                id="head"
+              />
+              <label class="form-check-label" for="head">Glava</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Vrat"
+                id="neck"
+              />
+              <label class="form-check-label" for="neck">Vrat</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Grudni Koš"
+                id="thorax"
+              />
+              <label class="form-check-label" for="thorax">Grudni Koš</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Stomak"
+                id="abdomen"
+              />
+              <label class="form-check-label" for="abdomen">Stomak</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Kičma"
+                id="spine"
+              />
+              <label class="form-check-label" for="spine">Kičma</label>
+            </div>
+            <img
+              src="./images/human-body-frontal.png"
+              alt="Dijagram Tela"
+              class="body-diagram"
+            />
+          </div>
+
+          <!-- Leva Strana: Slovo L i izbor mesta povrede -->
+          <div class="right-column">
+            <div class="text-center letter">L</div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Kost Klavikule"
+                id="claviculeL"
+              />
+              <label class="form-check-label" for="claviculeL"
+                >Kost Klavikule</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Rame"
+                id="shoulderL"
+              />
+              <label class="form-check-label" for="shoulderL">Rame</label>
+            </div>
+            <!-- Dodajte još checkbox opcija ovde -->
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Gornja Ruka"
+                id="upperarmL"
+              />
+              <label class="form-check-label" for="upperarmL"
+                >Gornja Ruka</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Lakat"
+                id="elbowL"
+              />
+              <label class="form-check-label" for="elbowL">Lakat</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Podlaktica"
+                id="forearmL"
+              />
+              <label class="form-check-label" for="forearmL">Podlaktica</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Šaka"
+                id="handL"
+              />
+              <label class="form-check-label" for="handL">Šaka</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Kuk"
+                id="hipL"
+              />
+              <label class="form-check-label" for="hipL">Kuk</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Gornji Deo Noge"
+                id="upperlegL"
+              />
+              <label class="form-check-label" for="upperlegL"
+                >Gornji Deo Noge</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Koleno"
+                id="kneeL"
+              />
+              <label class="form-check-label" for="kneeL">Koleno</label>
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Donji Deo Noge"
+                id="lowerlegL"
+              />
+              <label class="form-check-label" for="lowerlegL"
+                >Donji Deo Noge</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input injury-point"
+                name="injury_points"
+                value="Stopala"
+                id="feetL"
+              />
+              <label class="form-check-label" for="feetL">Stopala</label>
+            </div>
+          </div>
+        </div>
+
+        <h3>Tip povrede:</h3>
             <div id="injury-type-dropdowns"></div>
             <div class="mb-3">
-                <label for="medical_comment" class="form-label">Medical Comment:</label>
+                <label for="medical_comment" class="form-label">Medicinski komentar:</label>
                 <textarea class="form-control" id="medical_comment" name="medical_comment" required></textarea>
-            </div>
 
-            <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Submit Injury</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Pošalji povredu</button>
 
-            <!-- Signature Pad Modal -->
-            <div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="signatureModalLabel">Sign Here</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <canvas id="signaturePad" class="signature-pad"></canvas>
-                            <button type="button" id="clear-btn" class="btn btn-warning mt-3">Clear Signature</button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="confirmSignature" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+                <!-- Signature Pad Modal -->
+                <div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="signatureModalLabel">Podpisi ovde</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <canvas id="signaturePad" class="signature-pad"></canvas>
+                                <button type="button" id="clear-btn" class="btn btn-warning mt-3">Izbrisi podpis</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="confirmSignature" class="btn btn-primary" data-bs-dismiss="modal">Potvrdi</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+
+        
+      </form>
     </div>
 
     <!-- Firebase and JS Configuration -->
@@ -217,5 +426,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script src="javascript/injuries.js"></script>
 </body>
-
 </html>

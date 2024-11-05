@@ -1,72 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-  <title>My Registered Injuries</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/views.css">
-</head>
-<body>
-  <button onclick="history.back()" class="btn btn-secondary back-btn">Back</button>
-  <div class="container mt-5">
-    <h1 class="mb-4 text-dark">My Registered Injuries</h1>
-    
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Patient Name</th>
-            <th scope="col">Ski Run</th>
-            <th scope="col">Timestamp</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="injuries-list">
-          <!-- Injuries will be dynamically loaded here -->
-        </tbody>
-      </table>
-    </div>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>Moje Registrovane Povrede</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/views.css" />
+  </head>
+  <body>
+    <button onclick="history.back()" class="btn btn-secondary back-btn">
+      Nazad
+    </button>
+    <div class="container mt-5">
+      <h1 class="mb-4 text-dark">Moje Registrovane Povrede</h1>
 
-    <!-- Modal for Injury Details -->
-    <div class="modal fade" id="injuryDetailsModal" tabindex="-1" aria-labelledby="injuryDetailsLabel" aria-hidden="true" style="color: black;">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-center w-100" id="injuryDetailsLabel">Injury Details</h5>  <!-- Center the title -->
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="modal-injury-details">
-            <!-- Injury details will be injected here -->
-          </div>
-          <div class="modal-footer">
-            <button class="generate-pdf btn btn-primary" style="margin-right: auto;">Generate PDF</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Ime Pacijenta</th>
+              <th scope="col">Ski Staza</th>
+              <th scope="col">Vreme Unosa</th>
+              <th scope="col">Akcije</th>
+            </tr>
+          </thead>
+          <tbody id="injuries-list">
+            <!-- Povrede će biti dinamički učitane ovde -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal za Detalje o Povredi -->
+      <div
+        class="modal fade"
+        id="injuryDetailsModal"
+        tabindex="-1"
+        aria-labelledby="injuryDetailsLabel"
+        aria-hidden="true"
+        style="color: black"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-center w-100" id="injuryDetailsLabel">
+                Detalji o Povredi
+              </h5>
+              <!-- Centriraj naslov -->
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Zatvori"
+              ></button>
+            </div>
+            <div class="modal-body" id="modal-injury-details">
+              <!-- Detalji o povredi će biti umetnuti ovde -->
+            </div>
+            <div class="modal-footer">
+              <button
+                class="generate-pdf btn btn-primary"
+                style="margin-right: auto"
+              >
+                Generiši PDF
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Zatvori
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Kontrole Paginacije -->
+      <nav>
+        <div id="pagination" class="pagination"></div>
+      </nav>
     </div>
-    
-    <!-- Pagination Controls -->
-    <nav>
-      <div id="pagination" class="pagination"></div>
-    </nav>
-  </div>
 
-  <!-- Firebase and JS Configuration -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Firebase i JS Konfiguracija -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-  <!-- jsPDF library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF biblioteka -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Bootstrap JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Custom JavaScript -->
-  <script src="javascript/rescuerInjuryView.js"></script>
-</body>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Prilagođeni JavaScript -->
+    <script src="javascript/rescuerInjuryView.js"></script>
+  </body>
 </html>

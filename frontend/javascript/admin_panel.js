@@ -15,7 +15,6 @@ async function checkAuth() {
   const authToken = localStorage.getItem("authToken");
 
   if (!authToken) {
-    alert("You must be logged in to access this page.");
     window.location.href = "index.html";
     return;
   }
@@ -52,7 +51,6 @@ checkAuth();
 
 firebase.auth().onAuthStateChanged((user) => {
   if (!user) {
-    alert("You must be logged in to access this page.");
     window.location.href = "index.html";
   }
 });
