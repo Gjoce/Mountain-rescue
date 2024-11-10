@@ -207,6 +207,7 @@ function showInjuryDetailsModal(injury) {
           rescuer_name,
           timestamp,
           rescuer_signature,
+          ski_card_photo,
           injury_points,
           medical_comment,
           admin_signature,
@@ -251,9 +252,11 @@ function showInjuryDetailsModal(injury) {
             70
           );
 
-          pdfDoc.text("MEDICINSKE INFORMACIJE", 10, 90);
+          pdfDoc.text("Fotografija skijaške karte", 10, 80);
 
-          let yPosition = 110;
+          pdfDoc.text("MEDICINSKE INFORMACIJE", 10, 120);
+
+          let yPosition = 130;
           pdfDoc.text("Povrede:", 10, yPosition);
 
           if (Array.isArray(injury_points) && injury_points.length > 0) {
@@ -302,6 +305,8 @@ function showInjuryDetailsModal(injury) {
           };
 
           const promises = [];
+          if (ski_card_photo)
+            promises.push(addImageToPDF(ski_card_photo, 90, 75, 70, 50));
           if (rescuer_signature)
             promises.push(
               addImageToPDF(
@@ -310,7 +315,13 @@ function showInjuryDetailsModal(injury) {
                 pdfDoc.internal.pageSize.height - 35,
                 50,
                 20
-              )
+              ).then(() => {
+                pdfDoc.text(
+                  rescuer_name,
+                  80,
+                  pdfDoc.internal.pageSize.height - 20
+                );
+              })
             );
           if (status === "approved" && admin_signature && admin_name) {
             pdfDoc.text("Odobril:", 130, pdfDoc.internal.pageSize.height - 30);
