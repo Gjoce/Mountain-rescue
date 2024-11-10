@@ -19,14 +19,14 @@
     </button>
 
     <div class="container">
-      <h1 class="mb-4 text-center">Prijava Povrede</h1>
+      <h1 class="mb-4 text-center">Prijava povrede</h1>
 
       <form id="injuryForm" enctype="multipart/form-data">
         <!-- Izbor skijaške staze -->
         <div class="mb-3">
-          <label for="ski_run" class="form-label">Skijaška Staza:</label>
+          <label for="ski_run" class="form-label">Skijaška staza:</label>
           <select class="form-select" id="ski_run" name="ski_run" required>
-            <option value="" disabled selected>Izaberite Skijašku Stazu</option>
+            <option value="" disabled selected>Izaberite</option>
             <option value="Staza 1">Staza 1</option>
             <option value="Staza 2">Staza 2</option>
             <option value="Staza 3">Staza 3</option>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="name" class="form-label">Ime Povređene Osobe:</label>
+          <label for="name" class="form-label">Ime i prezime pacienta:</label>
           <input
             type="text"
             class="form-control"
@@ -45,7 +45,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="birth_date" class="form-label">Datum Rođenja:</label>
+          <label for="birth_date" class="form-label">Datum rođenja:</label>
           <input
             type="date"
             class="form-control"
@@ -57,7 +57,7 @@
 
         <div class="mb-3">
           <label for="ski_card_photo" class="form-label"
-            >Fotografija Skijaške Karte:</label
+            >Fotografija skijaške karte:</label
           >
           <input
             type="file"
@@ -70,7 +70,7 @@
           />
         </div>
 
-        <h3 class="text-center">Mesta Povrede:</h3>
+        <h3 class="text-center">Povređeni:</h3>
 
         <div class="injury-points-container">
           <!-- Desna Strana: Slovo R i izbor mesta povrede -->
@@ -81,11 +81,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Kost Klavikule"
+                value="Ključna kost"
                 id="claviculeR"
               />
               <label class="form-check-label" for="claviculeR"
-                >Kost Klavikule</label
+                >Ključna kost</label
               >
             </div>
             <div class="form-check">
@@ -105,11 +105,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Gornja Ruka"
+                value="Nadlaktica"
                 id="upperarmR"
               />
               <label class="form-check-label" for="upperarmR"
-                >Gornja Ruka</label
+                >Nadlaktica</label
               >
             </div>
             <div class="form-check">
@@ -157,11 +157,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Gornji Deo Noge"
+                value="Nadkolenica"
                 id="upperlegR"
               />
               <label class="form-check-label" for="upperlegR"
-                >Gornji Deo Noge</label
+                >Nadkolenica</label
               >
             </div>
             <div class="form-check">
@@ -179,11 +179,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Donji Deo Noge"
+                value="Podkolenica"
                 id="lowerlegR"
               />
               <label class="form-check-label" for="lowerlegR"
-                >Donji Deo Noge</label
+                >Podkolenica</label
               >
             </div>
             <div class="form-check">
@@ -191,10 +191,10 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Stopala"
+                value="Stopalo"
                 id="feetR"
               />
-              <label class="form-check-label" for="feetR">Stopala</label>
+              <label class="form-check-label" for="feetR">Stopalo</label>
             </div>
           </div>
 
@@ -265,11 +265,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Kost Klavikule"
+                value="Ključna kost"
                 id="claviculeL"
               />
               <label class="form-check-label" for="claviculeL"
-                >Kost Klavikule</label
+                >Ključna kost</label
               >
             </div>
             <div class="form-check">
@@ -288,11 +288,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Gornja Ruka"
+                value="Nadlaktica"
                 id="upperarmL"
               />
               <label class="form-check-label" for="upperarmL"
-                >Gornja Ruka</label
+                >Nadlaktica</label
               >
             </div>
             <div class="form-check">
@@ -340,11 +340,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Gornji Deo Noge"
+                value="Nadkolenica"
                 id="upperlegL"
               />
               <label class="form-check-label" for="upperlegL"
-                >Gornji Deo Noge</label
+                >Nadkolenica</label
               >
             </div>
             <div class="form-check">
@@ -362,11 +362,11 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Donji Deo Noge"
+                value="Podkolenica"
                 id="lowerlegL"
               />
               <label class="form-check-label" for="lowerlegL"
-                >Donji Deo Noge</label
+                >Podkolenica</label
               >
             </div>
             <div class="form-check">
@@ -374,10 +374,10 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Stopala"
+                value="Stopalo"
                 id="feetL"
               />
-              <label class="form-check-label" for="feetL">Stopala</label>
+              <label class="form-check-label" for="feetL">Stopalo</label>
             </div>
           </div>
         </div>
@@ -385,7 +385,7 @@
         <h3>Tip povrede:</h3>
             <div id="injury-type-dropdowns"></div>
             <div class="mb-3">
-                <label for="medical_comment" class="form-label">Medicinski komentar:</label>
+                <label for="medical_comment" class="form-label">Komentar:</label>
                 <textarea class="form-control" id="medical_comment" name="medical_comment" required></textarea>
 
                 <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Pošalji povredu</button>
@@ -395,12 +395,12 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="signatureModalLabel">Podpisi ovde</h5>
+                                <h5 class="modal-title" id="signatureModalLabel">Podpiši ovde</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <canvas id="signaturePad" class="signature-pad"></canvas>
-                                <button type="button" id="clear-btn" class="btn btn-warning mt-3">Izbrisi podpis</button>
+                                <button type="button" id="clear-btn" class="btn btn-warning mt-3">Izbriši podpis</button>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" id="confirmSignature" class="btn btn-primary" data-bs-dismiss="modal">Potvrdi</button>

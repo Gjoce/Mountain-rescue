@@ -407,7 +407,7 @@ function showInjuryDetailsModal(injury) {
 
   const adminSignatureDisplay =
     injury.status === "approved" && injury.admin_signature
-      ? `<strong>Podpis Nadrednog:</strong> 
+      ? `<strong>Podpis nadređenog:</strong> 
        <a href="${injury.admin_signature}" target="_blank">
          <img src="${injury.admin_signature}" alt="Podpis Nadrednog" width="100">
        </a><br>
@@ -418,9 +418,9 @@ function showInjuryDetailsModal(injury) {
     <div style="text-align: center;">
      <strong>Osnovne informacije</strong><br>
 </div>
-<strong>Ime pacijenta:</strong> ${injury.patient_name} <br>
+<strong>Ime pacienta:</strong> ${injury.patient_name} <br>
 <strong>Datum rođenja:</strong> ${injury.birth_date} <br>
-<strong>Staza:</strong> ${injury.ski_run} <br>
+<strong>Skijaška staza:</strong> ${injury.ski_run} <br>
 <strong>Spasilac:</strong> ${injury.rescuer_name}<br>
 <strong>ID povrede:</strong> ${injury.id}<br>
 <strong>Vreme unosa:</strong> ${new Date(
@@ -440,23 +440,23 @@ function showInjuryDetailsModal(injury) {
     <div style="text-align: center;">
       <strong>Medicinske Informacije</strong><br>
     </div>
-    <strong>Povredeni:</strong><br> ${injuryPoints} <br>
+    <strong>Povređeni:</strong><br> ${injuryPoints} <br>
     <div style="max-width: 100%; overflow-wrap: break-word; word-wrap: break-word;">
-  <strong>Medicinski komentar:</strong> ${injury.medical_comment} <br>
+  <strong>Komentar:</strong> ${injury.medical_comment} <br>
   <hr>
 </div>
 
 
-    <strong>Fotografija Skijaške Karte:</strong>
+    <strong>Fotografija skijaške karte:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
       <img src="${
         injury.ski_card_photo
-      }" alt="Fotografija Skijaške Karte" width="100">
+      }" alt="Fotografija skijaške karte" width="100">
     </a><br>
 
-    <strong>Podpis Spasioca:</strong>
+    <strong>Podpis spasioca:</strong>
     <a href="${injury.rescuer_signature}" target="_blank">
-      <img src="${injury.rescuer_signature}" alt="Podpis Spasioca" width="100">
+      <img src="${injury.rescuer_signature}" alt="Podpis spasioca" width="100">
     </a><br>
     <br>
     <hr>
@@ -475,7 +475,7 @@ function updatePagination(currentPage, totalPages) {
 
   if (currentPage > 1) {
     const prevButton = document.createElement("button");
-    prevButton.innerHTML = "Prethodni";
+    prevButton.innerHTML = "Nazad";
     prevButton.onclick = () => fetchInjuries(currentPage - 1);
     paginationElement.appendChild(prevButton);
   }
@@ -490,7 +490,7 @@ function updatePagination(currentPage, totalPages) {
 
   if (currentPage < totalPages) {
     const nextButton = document.createElement("button");
-    nextButton.innerHTML = "Sledeći";
+    nextButton.innerHTML = "Napred";
     nextButton.onclick = () => fetchInjuries(currentPage + 1);
     paginationElement.appendChild(nextButton);
   }

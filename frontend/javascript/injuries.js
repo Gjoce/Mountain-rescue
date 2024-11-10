@@ -9,7 +9,7 @@ const injuryTypes = `
         <option value="Prelom">Prelom</option>
         <option value="Iščašenje">Iščašenje</option>
         <option value="Posekotina">Posekotina</option>
-        <option value="Modrica">Modrica</option>
+        <option value="Modrica">Modrina</option>
 
     </select>
 `;
