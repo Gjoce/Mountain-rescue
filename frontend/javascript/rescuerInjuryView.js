@@ -104,7 +104,7 @@ function fetchRescuerInjuries(page = 1) {
           injuriesList.appendChild(row);
         });
       } else {
-        injuriesList.innerHTML = `<tr><td colspan="4">No injuries found.</td></tr>`;
+        injuriesList.innerHTML = `<tr><td colspan="4">Nisu pronađene povrede</td></tr>`;
       }
 
       updatePagination(data.currentPage, data.totalPages);
@@ -163,9 +163,11 @@ function showInjuryDetailsModal(injury) {
       <strong>Medicinske Informacije</strong><br>
     </div>
     <strong>Povredeni:</strong><br> ${injuryPoints} <br>
-    <strong>Medicinski komentar:</strong> ${injury.medical_comment} <br>
+    <div style="max-width: 100%; overflow-wrap: break-word; word-wrap: break-word;">
+  <strong>Medicinski komentar:</strong> ${injury.medical_comment} <br>
+  <hr>
+</div>
 
-    <hr>
 
     <strong>Fotografija Skijaške Karte:</strong>
     <a href="${injury.ski_card_photo}" target="_blank">
@@ -179,6 +181,7 @@ function showInjuryDetailsModal(injury) {
       <img src="${injury.rescuer_signature}" alt="Podpis Spasioca" width="100">
     </a><br>
     <br>
+    <hr>
     ${adminSignatureDisplay}
   `;
 
@@ -187,151 +190,180 @@ function showInjuryDetailsModal(injury) {
   );
   injuryModal.show();
 
-  const pdfButton = document.querySelector(".generate-pdf");
-  if (pdfButton) {
-    pdfButton.onclick = () => generatePDF(injury.id);
-  } else {
-    console.error("PDF button not found.");
-  }
-}
+  function generatePDF(injuryId) {
+    db.collection("injuries")
+      .doc(injuryId)
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          alert("No injury found with the provided ID");
+          return;
+        }
 
-function generatePDF(injuryId) {
-  db.collection("injuries")
-    .doc(injuryId)
-    .get()
-    .then((doc) => {
-      if (!doc.exists) {
-        alert("No injury found with the provided ID");
-        return;
-      }
+        const injury = doc.data();
+        const {
+          patient_name,
+          ski_run,
+          rescuer_name,
+          timestamp,
+          rescuer_signature,
+          injury_points,
+          medical_comment,
+          admin_signature,
+          admin_name,
+          status,
+        } = injury;
 
-      const injury = doc.data();
-      const {
-        patient_name,
-        birth_date,
-        ski_run,
-        rescuer_name,
-        timestamp,
-        ski_card_photo,
-        rescuer_signature,
-        injury_points,
-        medical_comment,
-        admin_signature,
-        admin_name,
-      } = injury;
+        const { jsPDF } = window.jspdf;
+        const pdfDoc = new jsPDF();
 
-      const { jsPDF } = window.jspdf;
-      const pdfDoc = new jsPDF();
+        const logoImg = new Image();
+        logoImg.src = "./images/logo.png";
+        logoImg.onload = () => {
+          pdfDoc.addImage(logoImg, "PNG", 10, 5, 40, 40);
 
-      pdfDoc.setFontSize(18);
-      pdfDoc.text("Injury Report", 10, 10);
-      pdfDoc.setFontSize(12);
+          // Set font to Helvetica (supports extended characters)
+          pdfDoc.setFont("helvetica");
+          pdfDoc.setFontSize(14);
+          pdfDoc.text("SPASILACKA SLUZBA JAHORINA", 60, 20);
+          pdfDoc.text("POVREDNI LIST", 60, 30);
 
-      pdfDoc.text(`Patient Name: ${patient_name}`, 10, 20);
-      pdfDoc.text(`Birth Date: ${birth_date}`, 10, 30);
-      pdfDoc.text(`Ski Run: ${ski_run}`, 10, 40);
-      pdfDoc.text(`Rescuer: ${rescuer_name}`, 10, 50);
+          // Injury Information Section
+          pdfDoc.setFontSize(12);
+          pdfDoc.text("PODATKE O POVREDI", 10, 50);
+          pdfDoc.text(`Pacient: ${patient_name}`, 10, 60);
+          pdfDoc.text(`Na stazi: ${ski_run}`, 90, 60);
+          pdfDoc.text(`Spasilac: ${rescuer_name}`, 10, 70);
 
-      const formattedTimestamp = timestamp
-        ? new Date(timestamp.seconds * 1000).toLocaleString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour12: false,
-          })
-        : "N/A";
+          pdfDoc.text(
+            `Pocetak povrede: ${new Date(
+              injury.timestamp.seconds * 1000
+            ).toLocaleString("en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour12: false,
+            })}`,
+            90,
+            70
+          );
 
-      pdfDoc.text(`Timestamp: ${formattedTimestamp}`, 10, 70);
+          pdfDoc.text("MEDICINSKE INFORMACIJE", 10, 90);
 
-      pdfDoc.text("Medical Information", 10, 80);
+          let yPosition = 110;
+          pdfDoc.text("Povrede:", 10, yPosition);
 
-      const injuryPointsText =
-        Array.isArray(injury_points) && injury_points.length > 0
-          ? injury_points
-              .map(
-                (pt, i) =>
-                  `${i + 1}. (side: ${pt.side}) (injury point: ${
-                    pt.point
-                  }) (type: ${pt.type})`
-              )
-              .join("\n")
-          : "No injury points available";
-
-      pdfDoc.text(`Injured:\n${injuryPointsText}`, 10, 90);
-      pdfDoc.text(`Medical Comment: ${medical_comment}`, 10, 100);
-
-      const addImageToPDF = (imageUrl, yPosition) => {
-        return fetch(imageUrl)
-          .then((response) => response.blob())
-          .then((blob) => {
-            const reader = new FileReader();
-            return new Promise((resolve, reject) => {
-              reader.onloadend = () => {
-                pdfDoc.addImage(reader.result, "JPEG", 10, yPosition, 50, 50);
-                resolve();
-              };
-              reader.onerror = () => reject("Error reading image");
-              reader.readAsDataURL(blob);
+          if (Array.isArray(injury_points) && injury_points.length > 0) {
+            injury_points.forEach((pt, i) => {
+              yPosition += 10;
+              pdfDoc.text(
+                `${i + 1}. (strana: ${pt.side}) (tačka povrede: ${
+                  pt.point
+                }) (tip: ${pt.type})`,
+                10,
+                yPosition
+              );
             });
+          } else {
+            yPosition += 10;
+            pdfDoc.text("Nema dostupnih podataka o povredama", 10, yPosition);
+          }
+          const pageWidth = pdfDoc.internal.pageSize.width;
+          const textWidth = pageWidth - 2 * 10;
+
+          yPosition += 20;
+          pdfDoc.text("Medicinski komentar:", 10, yPosition);
+
+          yPosition += 10;
+
+          pdfDoc.text(medical_comment, 10, yPosition, {
+            maxWidth: textWidth,
           });
-      };
 
-      const promises = [];
-      if (ski_card_photo) promises.push(addImageToPDF(ski_card_photo, 120));
-      if (rescuer_signature)
-        promises.push(addImageToPDF(rescuer_signature, 180));
+          pdfDoc.text("Spasilac:", 60, pdfDoc.internal.pageSize.height - 30);
 
-      Promise.all(promises)
-        .then(() => {
-          if (injury.status === "approved" && admin_signature && admin_name) {
-            pdfDoc.addPage();
-            pdfDoc.text("Admin Information", 10, 10);
-            pdfDoc.text(`Admin Name: ${admin_name}`, 10, 20);
-
-            return fetch(admin_signature)
+          const addImageToPDF = (imageUrl, x, y, width, height) => {
+            return fetch(imageUrl)
               .then((response) => response.blob())
               .then((blob) => {
                 const reader = new FileReader();
                 return new Promise((resolve, reject) => {
                   reader.onloadend = () => {
-                    pdfDoc.addImage(reader.result, "PNG", 10, 30, 50, 50);
+                    pdfDoc.addImage(reader.result, "JPEG", x, y, width, height);
                     resolve();
                   };
-                  reader.onerror = () =>
-                    reject("Error reading admin signature");
+                  reader.onerror = () => reject("Error reading image");
                   reader.readAsDataURL(blob);
                 });
               });
+          };
+
+          const promises = [];
+          if (rescuer_signature)
+            promises.push(
+              addImageToPDF(
+                rescuer_signature,
+                70,
+                pdfDoc.internal.pageSize.height - 35,
+                50,
+                20
+              )
+            );
+          if (status === "approved" && admin_signature && admin_name) {
+            pdfDoc.text("Odobril:", 130, pdfDoc.internal.pageSize.height - 30);
+            promises.push(
+              addImageToPDF(
+                admin_signature,
+                150,
+                pdfDoc.internal.pageSize.height - 35,
+                50,
+                20
+              ).then(() => {
+                pdfDoc.text(
+                  admin_name,
+                  160,
+                  pdfDoc.internal.pageSize.height - 20
+                );
+              })
+            );
           }
-        })
-        .then(() => {
-          const dateGenerated = new Date().toLocaleString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour12: false,
-          });
-          pdfDoc.text(
-            `Generated on: ${dateGenerated}`,
-            10,
-            pdfDoc.internal.pageSize.height - 10
-          );
-          pdfDoc.save(`${patient_name}_Injury_Report.pdf`);
-        })
-        .catch((error) => {
-          console.error("Error adding images to PDF:", error);
-          alert("Could not generate PDF with images.");
-        });
-    })
-    .catch((error) => {
-      console.error("Error fetching injury details:", error);
-      alert("Could not fetch injury details for PDF generation.");
+
+          Promise.all(promises)
+            .then(() => {
+              const dateGenerated = new Date().toLocaleDateString("en-GB");
+              pdfDoc.text(
+                `Datum: ${dateGenerated}`,
+                10,
+                pdfDoc.internal.pageSize.height - 30
+              );
+
+              pdfDoc.save(`${patient_name}_Injury_Report.pdf`);
+            })
+            .catch((error) => {
+              console.error("Error adding images to PDF:", error);
+              alert("Could not generate PDF with images.");
+            });
+        };
+      })
+      .catch((error) => {
+        console.error("Error fetching injury details:", error);
+        alert("Could not fetch injury details for PDF generation.");
+      });
+  }
+
+  document
+    .querySelector(".generate-pdf")
+    .addEventListener("click", function () {
+      const modalDetails = document.getElementById("modal-injury-details");
+      const injuryId = modalDetails.getAttribute("data-injury-id");
+      if (!injuryId) {
+        alert("No injury ID found. Please select an injury.");
+        return;
+      }
+      generatePDF(injuryId);
     });
 }
 

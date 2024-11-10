@@ -5,7 +5,7 @@ const injuryTypes = `
     <label class="form-label">Izberite tip povrede:</label>
     <select class="form-select" name="injury_type">
         <option value="" disabled selected>Tip povrede</option>
-        <option value="Uganuće">Uganuće</option>
+        <option value="Uganuče">Uganuče</option>
         <option value="Prelom">Prelom</option>
         <option value="Iščašenje">Iščašenje</option>
         <option value="Posekotina">Posekotina</option>
@@ -114,7 +114,7 @@ document
             ? "L"
             : injuryId.endsWith("R")
             ? "D"
-            : "Center";
+            : "Centar";
           return {
             point: checkbox.value,
             side: side,

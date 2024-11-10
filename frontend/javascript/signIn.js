@@ -63,10 +63,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     } else {
       const errorData = await response.json();
       document.getElementById("login-error").textContent =
-        "Login failed. Invalid credentials or user not found.";
+        "Prijava nije uspela. Nevažeći akreditivi ili korisnik nije pronađen.";
     }
   } catch (error) {
     document.getElementById("login-error").textContent =
-      "Login failed. Please try again.";
+      "Prijava nije uspela. Pokušajte ponovo.";
   }
 });

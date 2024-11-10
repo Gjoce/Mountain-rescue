@@ -52,7 +52,7 @@ document
 
       const data = await response.json();
       if (response.ok) {
-        alert("Rescuer registered successfully!");
+        alert("Spasilac je uspešno dodan!");
       } else {
         throw new Error(data.message || "Failed to register rescuer.");
       }
