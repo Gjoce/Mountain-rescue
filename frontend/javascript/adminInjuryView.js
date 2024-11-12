@@ -159,8 +159,8 @@ function generatePDF(injuryId) {
         pdfDoc.setFontSize(12);
         pdfDoc.text("PODATKE O POVREDI", 10, 50);
         pdfDoc.text(`Pacient: ${patient_name}`, 10, 60);
-        pdfDoc.text(`Na stazi: ${ski_run}`, 90, 60);
-        pdfDoc.text(`Spasilac: ${rescuer_name}`, 10, 70);
+        pdfDoc.text(`Na stazi: ${ski_run}`, 10, 70);
+        pdfDoc.text(`Spasilac: ${rescuer_name}`, 10, 80);
 
         pdfDoc.text(
           `Pocetak povrede: ${new Date(
@@ -174,11 +174,11 @@ function generatePDF(injuryId) {
             day: "2-digit",
             hour12: false,
           })}`,
-          90,
-          70
+          10,
+          90
         );
 
-        pdfDoc.text("Fotografija skijaške karte", 10, 80);
+        pdfDoc.text("Fotografija skijaške karte", 110, 50);
 
         pdfDoc.text("MEDICINSKE INFORMACIJE", 10, 120);
 
@@ -232,7 +232,7 @@ function generatePDF(injuryId) {
 
         const promises = [];
         if (ski_card_photo)
-          promises.push(addImageToPDF(ski_card_photo, 90, 75, 40, 60));
+          promises.push(addImageToPDF(ski_card_photo, 110, 55, 60, 80));
         if (rescuer_signature)
           promises.push(
             addImageToPDF(
