@@ -149,7 +149,7 @@ function generatePDF(injuryId) {
       logoImg.onload = () => {
         pdfDoc.addImage(logoImg, "PNG", 10, 5, 40, 40);
 
-        // Set font to Helvetica (supports extended characters)
+        // Set font to Helvetica
         pdfDoc.setFont("helvetica");
         pdfDoc.setFontSize(14);
         pdfDoc.text("SPASILACKA SLUZBA JAHORINA", 60, 20);
@@ -232,7 +232,7 @@ function generatePDF(injuryId) {
 
         const promises = [];
         if (ski_card_photo)
-          promises.push(addImageToPDF(ski_card_photo, 90, 75, 70, 50));
+          promises.push(addImageToPDF(ski_card_photo, 90, 75, 40, 60));
         if (rescuer_signature)
           promises.push(
             addImageToPDF(

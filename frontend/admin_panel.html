@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     <title>Admin Panel</title>
-
-    <!-- Bootstrap CSS -->
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
@@ -15,9 +13,6 @@
   </head>
   <body>
     <button id="logout" class="btn btn-danger logout-btn">Izađi</button>
-    <!-- Dugme za odjavu u gornjem desnom uglu -->
-
-    <!-- SVG Logo centriran na vrhu -->
     <div class="logo-container">
       <img src="./images/logo.png" alt="Logo" width="200" height="200" />
     </div>
@@ -27,28 +22,16 @@
 
     <div class="login-container">
       <a href="registerInjury.html" class="btn btn-primary">NOVA POVREDA</a>
-      <!-- Veliko dugme za prijavu povreda -->
       <a href="adminViewInjury.html" class="btn btn-secondary"
         >Prošle povrede</a
       >
-      <!-- Dugme za istoriju povreda -->
       <a href="addRescuer.html" class="btn btn-info">Koordinacioni panel</a>
-      <!-- Dugme za koordinacioni panel -->
     </div>
 
-    <!-- Firebase App (Core SDK) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-
-    <!-- Firebase Auth SDK (opciono, ako koristite Firebase Authentication) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
-    <!-- Firebase Firestore SDK (ako koristite Firestore) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-    <!-- JavaScript fajl -->
     <script src="javascript/admin_panel.js"></script>
-
-    <!-- Bootstrap JS i zavisnosti -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

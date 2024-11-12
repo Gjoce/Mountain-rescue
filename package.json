@@ -6,7 +6,7 @@
     "start": "node backend/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Georgi Dimov",
   "license": "ISC",
   "description": "",
   "dependencies": {

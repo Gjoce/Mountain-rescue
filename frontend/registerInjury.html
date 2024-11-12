@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     <title>Prijava Povrede</title>
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -14,7 +13,6 @@
   </head>
 
   <body>
-    <!-- Add this overlay to your HTML file -->
     <div id="loading-overlay" style="display: none">
       <div class="spinner"></div>
     </div>
@@ -27,7 +25,6 @@
       <h1 class="mb-4 text-center">Prijava povrede</h1>
 
       <form id="injuryForm" enctype="multipart/form-data">
-        <!-- Izbor skijaške staze -->
         <div class="mb-3">
           <label for="ski_run" class="form-label">Skijaška staza:</label>
           <select class="form-select" id="ski_run" name="ski_run" required>
@@ -78,7 +75,6 @@
         <h3 class="text-center">Povređeni:</h3>
 
         <div class="injury-points-container">
-          <!-- Desna Strana: Slovo R i izbor mesta povrede -->
           <div class="left-column">
             <div class="text-center letter">D</div>
             <div class="form-check">
@@ -103,7 +99,6 @@
               />
               <label class="form-check-label" for="shoulderR">Rame</label>
             </div>
-            <!-- Dodajte još checkbox opcija ovde -->
 
             <div class="form-check">
               <input
@@ -203,7 +198,7 @@
             </div>
           </div>
 
-          <!-- Sredina: PNG slika i centrirani izbori -->
+        
           <div class="center-column text-center">
             <div class="form-check">
               <input
@@ -262,7 +257,7 @@
             />
           </div>
 
-          <!-- Leva Strana: Slovo L i izbor mesta povrede -->
+   
           <div class="right-column">
             <div class="text-center letter">L</div>
             <div class="form-check">
@@ -287,7 +282,6 @@
               />
               <label class="form-check-label" for="shoulderL">Rame</label>
             </div>
-            <!-- Dodajte još checkbox opcija ovde -->
             <div class="form-check">
               <input
                 type="checkbox"
@@ -395,7 +389,6 @@
 
                 <button type="submit" id="submitBtn" class="btn btn-primary mt-3">Pošalji povredu</button>
 
-                <!-- Signature Pad Modal -->
                 <div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -419,15 +412,11 @@
     </div>
     </div>
 
-    <!-- Firebase and JS Configuration -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    
-    <!-- SignaturePad library -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script src="javascript/injuries.js"></script>
