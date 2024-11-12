@@ -5,9 +5,9 @@ const injuryTypes = `
     <label class="form-label">Izberite tip povrede:</label>
     <select class="form-select" name="injury_type">
         <option value="" disabled selected>Tip povrede</option>
-        <option value="Uganuče">Uganuče</option>
+        <option value="Uganuce">Uganuče</option>
         <option value="Prelom">Prelom</option>
-        <option value="Iščašenje">Iščašenje</option>
+        <option value="Išcašenje">Iščašenje</option>
         <option value="Posekotina">Posekotina</option>
         <option value="Modrica">Modrina</option>
 
@@ -88,6 +88,11 @@ document
   .addEventListener("click", async function () {
     const user = firebase.auth().currentUser;
     submitBtn.style.display = "none";
+
+    const loadingOverlay = document.getElementById("loading-overlay");
+    const content = document.getElementById("content-wrapper");
+    loadingOverlay.style.display = "flex";
+    content.classList.add("blur-content");
 
     if (user) {
       if (!signaturePad.isEmpty()) {
@@ -180,6 +185,9 @@ document
         } catch (error) {
           console.error("Error submitting injury:", error);
           alert("Failed to submit injury.");
+        } finally {
+          loadingOverlay.style.display = "none";
+          content.classList.remove("blur-content");
         }
       } else {
         alert("Please provide a signature.");

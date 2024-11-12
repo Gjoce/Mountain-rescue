@@ -14,6 +14,11 @@
   </head>
 
   <body>
+    <!-- Add this overlay to your HTML file -->
+    <div id="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
+    <div id="content-wrapper">
     <button onclick="history.back()" class="btn-secondary back-btn">
       Nazad
     </button>
@@ -81,7 +86,7 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Ključna kost"
+                value="Kljucna kost"
                 id="claviculeR"
               />
               <label class="form-check-label" for="claviculeR"
@@ -245,7 +250,7 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Kičma"
+                value="Kicma"
                 id="spine"
               />
               <label class="form-check-label" for="spine">Kičma</label>
@@ -265,7 +270,7 @@
                 type="checkbox"
                 class="form-check-input injury-point"
                 name="injury_points"
-                value="Ključna kost"
+                value="Kljucna kost"
                 id="claviculeL"
               />
               <label class="form-check-label" for="claviculeL"
@@ -411,6 +416,7 @@
 
         
       </form>
+    </div>
     </div>
 
     <!-- Firebase and JS Configuration -->

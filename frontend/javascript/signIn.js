@@ -14,6 +14,11 @@ const db = firebase.firestore();
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const loadingOverlay = document.getElementById("loading-overlay");
+  const content = document.getElementById("content-wrapper");
+  loadingOverlay.style.display = "flex";
+  content.classList.add("blur-content");
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
@@ -22,7 +27,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       email,
       password
     );
-
     const user = userCredential.user;
     const uid = user.uid;
     const idToken = await user.getIdToken();
@@ -68,5 +72,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   } catch (error) {
     document.getElementById("login-error").textContent =
       "Prijava nije uspela. Pokušajte ponovo.";
+  } finally {
+    loadingOverlay.style.display = "none";
+    content.classList.remove("blur-content");
   }
 });

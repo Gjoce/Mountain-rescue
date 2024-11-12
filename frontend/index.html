@@ -19,35 +19,41 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <!-- SVG Logo centriran na vrhu -->
-    <div class="logo-container text-center">
-      <img src="./images/logo.png" alt="Logo" width="200" height="200" />
+    <!-- Add this overlay to your HTML file -->
+    <div id="loading-overlay" style="display: none">
+      <div class="spinner"></div>
     </div>
-    <h1 style="text-align: center">
-      <strong>Spasilačka Služba Jahorina</strong>
-    </h1>
+    <div id="content-wrapper">
+      <!-- SVG Logo centriran na vrhu -->
+      <div class="logo-container text-center">
+        <img src="./images/logo.png" alt="Logo" width="200" height="200" />
+      </div>
+      <h1 style="text-align: center">
+        <strong>Spasilačka Služba Jahorina</strong>
+      </h1>
 
-    <div class="login-container">
-      <h3>Prijava</h3>
-      <form id="loginForm">
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          id="password"
-          class="form-control"
-          placeholder="Lozinka"
-          required
-        />
-        <button type="submit" class="btn btn-primary">Prijavi se</button>
-      </form>
-      <div id="login-error"></div>
-      <div id="result"></div>
+      <div class="login-container">
+        <h3>Prijava</h3>
+        <form id="loginForm">
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            placeholder="Email"
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Lozinka"
+            required
+          />
+          <button type="submit" class="btn btn-primary">Prijavi se</button>
+        </form>
+        <div id="login-error"></div>
+        <div id="result"></div>
+      </div>
     </div>
 
     <!-- Footer -->

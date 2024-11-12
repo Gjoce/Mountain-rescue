@@ -189,7 +189,7 @@ function generatePDF(injuryId) {
           injury_points.forEach((pt, i) => {
             yPosition += 10;
             pdfDoc.text(
-              `${i + 1}. (strana: ${pt.side}) (tačka povrede: ${
+              `${i + 1}. (strana: ${pt.side}) (povredene tacke: ${
                 pt.point
               }) (tip: ${pt.type})`,
               10,
@@ -277,7 +277,7 @@ function generatePDF(injuryId) {
               pdfDoc.internal.pageSize.height - 30
             );
 
-            pdfDoc.save(`${patient_name}_Injury_Report.pdf`);
+            pdfDoc.save(`${patient_name}_izveštaj_o_povredi.pdf`);
           })
           .catch((error) => {
             console.error("Error adding images to PDF:", error);
@@ -344,6 +344,8 @@ function approveInjury(event, injuryId) {
                 adminSignatureElement.style.display = "block";
                 adminNameElement.innerHTML = `Prihvaćena od: ${adminName}`;
               }
+
+              location.reload();
             } else {
               alert("Error approving injury: " + data.error);
             }

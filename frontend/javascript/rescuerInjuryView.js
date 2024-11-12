@@ -263,7 +263,7 @@ function showInjuryDetailsModal(injury) {
             injury_points.forEach((pt, i) => {
               yPosition += 10;
               pdfDoc.text(
-                `${i + 1}. (strana: ${pt.side}) (tačka povrede: ${
+                `${i + 1}. (strana: ${pt.side}) (povredene tacke: ${
                   pt.point
                 }) (tip: ${pt.type})`,
                 10,
