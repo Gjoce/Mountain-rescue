@@ -4,13 +4,16 @@ if (!authToken) {
 } else {
   const checkAdminStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + authToken,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://mountain-rescue.onrender.com/api/login",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + authToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         window.location.href = "index.html";
@@ -41,14 +44,17 @@ document
     const isAdmin = e.target.isAdmin.checked;
 
     try {
-      const response = await fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ name, email, password, isAdmin }),
-      });
+      const response = await fetch(
+        "https://mountain-rescue.onrender.com/api/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ name, email, password, isAdmin }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {

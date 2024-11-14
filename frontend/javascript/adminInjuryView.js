@@ -21,13 +21,16 @@ async function checkAdminAuth() {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/login`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + authToken,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `https://mountain-rescue.onrender.com/api/login`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + authToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json();
 
@@ -48,7 +51,7 @@ async function checkAdminAuth() {
 function fetchInjuries(page = 1) {
   checkAdminAuth();
   fetch(
-    `http://localhost:3000/api/injuries/admin?page=${page}&limit=${limit}`,
+    `https://mountain-rescue.onrender.com/api/injuries/admin?page=${page}&limit=${limit}`,
     {
       method: "GET",
       headers: {
@@ -319,17 +322,20 @@ function approveInjury(event, injuryId) {
         const adminSignatureData = signaturePad.toDataURL();
         const adminName = localStorage.getItem("userName");
 
-        fetch(`http://localhost:3000/api/injuries/${injuryId}/approve`, {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("authToken"),
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            admin_signature: adminSignatureData,
-            admin_name: adminName,
-          }),
-        })
+        fetch(
+          `https://mountain-rescue.onrender.com/api/injuries/${injuryId}/approve`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("authToken"),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              admin_signature: adminSignatureData,
+              admin_name: adminName,
+            }),
+          }
+        )
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
@@ -372,13 +378,16 @@ function approveInjury(event, injuryId) {
 
 function rejectInjury(event, injuryId) {
   event.stopPropagation();
-  fetch(`http://localhost:3000/api/injuries/${injuryId}/reject`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("authToken"),
-      "Content-Type": "application/json",
-    },
-  })
+  fetch(
+    `https://mountain-rescue.onrender.com/api/injuries/${injuryId}/reject`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("authToken"),
+        "Content-Type": "application/json",
+      },
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {

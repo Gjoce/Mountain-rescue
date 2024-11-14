@@ -22,13 +22,16 @@ async function checkAuth() {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/login`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + authToken,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `https://mountain-rescue.onrender.com/api/login`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + authToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json();
 
@@ -49,7 +52,7 @@ async function checkAuth() {
 function fetchRescuerInjuries(page = 1) {
   checkAuth();
   fetch(
-    `http://localhost:3000/api/injuries/${userId}?page=${page}&limit=${limit}`,
+    `https://mountain-rescue.onrender.com/api/injuries/${userId}?page=${page}&limit=${limit}`,
     {
       method: "GET",
       headers: {

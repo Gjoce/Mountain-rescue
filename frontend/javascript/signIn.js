@@ -47,13 +47,16 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       localStorage.setItem("userName", userData.name || "");
     }
 
-    const response = await fetch("http://localhost:3000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${idToken}`,
-      },
-    });
+    const response = await fetch(
+      "https://mountain-rescue.onrender.com/api/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();

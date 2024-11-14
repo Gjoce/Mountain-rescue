@@ -20,13 +20,16 @@ async function checkAuth() {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/login`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + authToken,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `https://mountain-rescue.onrender.com/api/login`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + authToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json();
 

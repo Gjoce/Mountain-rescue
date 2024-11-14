@@ -9,7 +9,12 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://mountain-rescue-863ea.web.app",
+    credentials: true,
+  })
+);
 
 app.use("/api/injuries", injuriesRouter);
 app.use("/api", registerRouter);
